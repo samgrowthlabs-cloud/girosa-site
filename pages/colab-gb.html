@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COLAB-GB - Girosa Beauty</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header será inserido aqui automaticamente -->
+    <div id="header-placeholder"></div>
+
+    <!-- Modal de Login SIMPLIFICADO -->
+    <div class="login-modal" id="login-modal">
+        <div class="login-container">
+            <div class="login-header">
+                <h2><i class="fas fa-lock"></i> Acesso Restrito</h2>
+                <p>Área exclusiva para colaboradores Girosa Beauty</p>
+            </div>
+            
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="access-code">Código de Acesso</label>
+                    <input type="password" id="access-code" class="form-control" 
+                           placeholder="Digite o código de acesso" required
+                           autocomplete="off">
+                    <small class="form-text">Código fornecido pela administração</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="affiliate-code">Código de Afiliado (Opcional)</label>
+                    <input type="text" id="affiliate-code" class="form-control" 
+                           placeholder="GB001, GB002, etc." autocomplete="off">
+                    <small class="form-text">Se você é afiliado, insira seu código</small>
+                </div>
+                
+                <button type="submit" class="btn btn-login">
+                    <i class="fas fa-unlock"></i> Acessar Área
+                </button>
+            </form>
+            
+            <div class="login-error" id="login-error" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="error-message-text">Código de acesso incorreto</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conteúdo da Área Restrita -->
+    <div id="colab-content" style="display: none;">
+        <!-- Seção Hero -->
+        <section class="page-hero">
+            <div class="page-hero-content">
+                <h1>COLAB-GB</h1>
+                <p>Área exclusiva para colaboradores e afiliados</p>
+                <div class="user-info">
+                    <span id="user-welcome">Bem-vindo, Colaborador!</span>
+                    <button id="logout-btn" class="btn btn-outline btn-sm">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="colab-gb">
+            <div class="colab-container">
+                <!-- Sistema de Busca por Código -->
+                <div class="search-system">
+                    <h2>Buscar Trança por Código</h2>
+                    <p>Digite o código da trança para ver todos os detalhes, preços e imagem</p>
+                    
+                    <div class="search-box-container">
+                        <input type="text" id="braid-code-input" class="search-input" placeholder="Ex: FEM01, MAS02, FEM03..." maxlength="10">
+                        <button id="search-braid-btn" class="btn">
+                            <i class="fas fa-search"></i> Buscar Trança
+                        </button>
+                    </div>
+                    
+                    <div class="code-examples">
+                        <h4>Códigos Existentes:</h4>
+                        <div class="codes-list" id="codes-list">
+                            <!-- Lista de códigos será preenchida via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resultado da Busca -->
+                <div class="search-results" id="search-results" style="display: none;">
+                    <div class="result-card">
+                        <div class="result-image">
+                            <img id="result-braid-img" src="" alt="Trança">
+                        </div>
+                        <div class="result-info">
+                            <div class="result-header">
+                                <h3 id="result-braid-title"></h3>
+                                <span class="braid-code-badge" id="result-braid-code"></span>
+                            </div>
+                            
+                            <div class="result-category">
+                                <span id="result-braid-category"></span>
+                            </div>
+                            
+                            <p class="result-description" id="result-braid-description"></p>
+                            
+                            <div class="result-price-section">
+                                <div class="result-price" id="result-braid-price"></div>
+                                <div class="price-comission">
+                                    <h4>Comissões para Afiliados:</h4>
+                                    <div class="comission-types">
+                                        <div class="comission-type">
+                                            <span class="comission-level">BAS:</span>
+                                            <span class="comission-value">10% = R$ <span id="comission-bas"></span></span>
+                                        </div>
+                                        <div class="comission-type">
+                                            <span class="comission-level">INT:</span>
+                                            <span class="comission-value">13% = R$ <span id="comission-int"></span></span>
+                                        </div>
+                                        <div class="comission-type">
+                                            <span class="comission-level">TOP:</span>
+                                            <span class="comission-value">15% = R$ <span id="comission-top"></span></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="result-characteristics">
+                                <h4>Características:</h4>
+                                <ul id="result-braid-characteristics">
+                                    <!-- Características serão preenchidas via JavaScript -->
+                                </ul>
+                            </div>
+                            
+                            <div class="result-actions">
+                                <button class="btn btn-outline" id="share-braid-btn">
+                                    <i class="fas fa-share-alt"></i> Compartilhar
+                                </button>
+                                <button class="btn" id="whatsapp-braid-btn">
+                                    <i class="fab fa-whatsapp"></i> Enviar no WhatsApp
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mensagem de erro -->
+                <div class="error-message" id="error-message" style="display: none;">
+                    <div class="error-content">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Trança Não Encontrada</h3>
+                        <p>O código digitado não corresponde a nenhuma trança cadastrada.</p>
+                        <p>Verifique se o código está correto ou consulte a lista de códigos disponíveis.</p>
+                    </div>
+                </div>
+
+                <!-- Lista Completa de Tranças -->
+                <div class="all-braids-section">
+                    <h2>Catálogo Completo de Tranças</h2>
+                    <p>Visualize todas as tranças disponíveis para indicação</p>
+                    
+                    <div class="braids-grid-colab" id="braids-grid-colab">
+                        <!-- Todas as tranças serão carregadas aqui via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer será inserido aqui automaticamente -->
+    <div id="footer-placeholder"></div>
+
+    <script src="../js/template.js"></script>
+    <script src="../js/script.js"></script>
+</body>
+</html>

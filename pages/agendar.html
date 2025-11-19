@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamento - Girosa Beauty</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header e Navegação -->
+    <div id="header-placeholder"></div>
+
+    <!-- Seção Hero -->
+    <section class="page-hero">
+        <div class="page-hero-content">
+            <h1>Agendamento</h1>
+            <p>Escolha o estilo de trança que deseja e solicite seu agendamento</p>
+        </div>
+    </section>
+
+    <!-- Seção Agendamento -->
+    <section id="booking">
+        <div class="filter-container">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">Todos</button>
+                <button class="filter-btn" data-filter="feminino">Feminino</button>
+                <button class="filter-btn" data-filter="masculino">Masculino</button>
+            </div>
+            <input type="text" class="search-box" placeholder="Pesquisar tipo de trança...">
+        </div>
+        
+        <div class="braids-grid" id="braids-container">
+            <!-- As tranças serão inseridas aqui via JavaScript -->
+        </div>
+    </section>
+
+
+    <!-- Modal de Detalhes da Trança - ATUALIZADO COM JUMBO -->
+    <div class="modal" id="braid-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            
+            <div class="modal-image">
+                <img id="modal-braid-img" src="" alt="Trança">
+                <!-- Controles de zoom (opcional) -->
+                <div class="zoom-controls">
+                    <button class="zoom-btn" id="zoom-in">
+                        <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button class="zoom-btn" id="zoom-out">
+                        <i class="fas fa-search-minus"></i>
+                    </button>
+                    <button class="zoom-btn" id="zoom-reset">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="modal-info">
+                <h2 id="modal-braid-title"></h2>
+                <p id="modal-braid-description"></p>
+                <div class="modal-price" id="modal-braid-price"></div>
+                
+                <form id="booking-form">
+                    <div class="form-group">
+                        <label for="client-name">Nome Completo</label>
+                        <input type="text" id="client-name" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="client-cpf">CPF</label>
+                        <input type="text" id="client-cpf" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="client-phone">Telefone</label>
+                        <input type="tel" id="client-phone" class="form-control" required>
+                    </div>
+                    
+                    <!-- NOVO CAMPO: Jumbo do Cliente -->
+                    <div class="form-group jumbo-section">
+                        <div class="jumbo-option">
+                            <input type="checkbox" id="jumbo-cliente" name="jumbo-cliente">
+                            <label for="jumbo-cliente">
+                                <i class="fas fa-check-circle"></i>
+                                O jumbo é de minha propriedade
+                            </label>
+                        </div>
+                        <small class="form-text jumbo-discount-text">
+                            <i class="fas fa-tag"></i>
+                            Com jumbo próprio: <strong>DESCONTO DE R$ 100,00</strong>
+                        </small>
+                        <small class="form-text jumbo-info">
+                            Se o jumbo for da empresa, o valor permanece normal
+                        </small>
+                    </div>
+                    
+                    <div class="price-summary" id="price-summary" style="display: none;">
+                        <div class="summary-line">
+                            <span>Preço original:</span>
+                            <span id="summary-original-price"></span>
+                        </div>
+                        <div class="summary-line discount-line">
+                            <span>Desconto jumbo:</span>
+                            <span>- R$ 100,00</span>
+                        </div>
+                        <div class="summary-line total-line">
+                            <span>Valor final:</span>
+                            <span id="summary-final-price"></span>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn">Solicitar Agendamento</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Scripts -->
+    <script src="../js/template.js"></script>
+    <script src="../js/script.js"></script>
+</body>
+</html>

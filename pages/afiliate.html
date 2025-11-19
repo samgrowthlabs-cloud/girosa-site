@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Afiliador GB - Girosa Beauty</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <!-- Seção Hero -->
+    <section class="page-hero">
+        <div class="page-hero-content">
+            <h1>Afiliador GB</h1>
+            <p>Junte-se ao nosso time de afiliados e ganhe comissões</p>
+        </div>
+    </section>
+
+    <!-- Seção Afiliados -->
+    <section id="affiliates">
+        <div class="affiliate-info">
+            <h2>Como Funciona o Programa de Afiliados</h2>
+            <p>Nosso programa de afiliados permite que você indique nossos serviços e ganhe comissões por cada venda realizada através do seu código. É uma ótima oportunidade para aumentar sua renda enquanto ajuda seus amigos a ficarem ainda mais bonitos!</p>
+        </div>
+        
+        <div class="affiliate-steps">
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h3>Solicitação</h3>
+                <p>Faça sua solicitação para se tornar um afiliado GB</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>Análise</h3>
+                <p>Analisaremos seu perfil para verificar compatibilidade</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Aprovação</h3>
+                <p>Se aprovado, você receberá seus códigos de afiliado</p>
+            </div>
+        </div>
+        
+        <div class="affiliate-types">
+            <div class="affiliate-type bas">
+                <h3>Afiliador BAS</h3>
+                <div class="commission">10%</div>
+                <p>Comissão: 10%</p>
+                <p>Desconto para cliente: 10%</p>
+            </div>
+            <div class="affiliate-type int">
+                <h3>Afiliador INT</h3>
+                <div class="commission">13%</div>
+                <p>Comissão: 13%</p>
+                <p>Desconto para cliente: 13%</p>
+            </div>
+            <div class="affiliate-type top">
+                <h3>Afiliador TOP</h3>
+                <div class="commission">15%</div>
+                <p>Comissão: 15%</p>
+                <p>Desconto para cliente: 15%</p>
+            </div>
+        </div>
+        
+        <div class="affiliate-details">
+            <h3>Detalhes do Programa</h3>
+            <ul>
+                <li>Os valores são distribuídos no quinto dia útil do mês</li>
+                <li>Afiliados que baterem a meta do mês recebem mais códigos no próximo mês</li>
+                <li>Possibilidade de aumento de porcentagem de comissão (análise de especialista)</li>
+                <li>Possibilidade de subir de nível de afiliador</li>
+                <li>Afiliados que não venderem nada recebem uma advertência escrita</li>
+                <li>Se não vender nada por dois meses consecutivos, será removido da lista de afiliados</li>
+            </ul>
+        </div>
+        
+        <div class="affiliate-form">
+            <h3>Solicitar Afiliação</h3>
+            <form id="affiliate-request-form">
+                <div class="form-group">
+                    <label for="affiliate-name">Nome Completo</label>
+                    <input type="text" id="affiliate-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="affiliate-cpf">CPF</label>
+                    <input type="text" id="affiliate-cpf" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="affiliate-suggestions">O que você pode fazer para melhorar o fluxo de clientes?</label>
+                    <textarea id="affiliate-suggestions" class="form-control" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn">Enviar Solicitação</button>
+            </form>
+        </div>
+        
+        <div class="official-affiliates">
+            <h3>Afiliados Oficiais</h3>
+            <table class="affiliates-table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Número Único</th>
+                        <th>Tipo</th>
+                    </tr>
+                </thead>
+                <tbody id="affiliates-list">
+                    <!-- Lista de afiliados será inserida aqui via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Scripts -->
+    <script src="../js/template.js"></script>
+    <script src="../js/script.js"></script>
+</body>
+</html>
