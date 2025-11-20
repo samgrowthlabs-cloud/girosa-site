@@ -188,7 +188,7 @@ const videosData = [
 // Sistema de Promoções - FÁCIL DE MODIFICAR
 // Para ativar promoções, defina os valores entre 0 e 1 (ex: 0.1 = 10% de desconto)
 // Se deixar como null, não haverá promoção para essa categoria
-const promocao_all = 0.1;      // Promoção para todos os tipos (ex: 0.1 para 10% off)
+const promocao_all = 0.9;      // Promoção para todos os tipos (ex: 0.1 para 10% off)
 const promocao_mascu = null;    // Promoção apenas para masculino
 const promocao_femini = null;   // Promoção apenas para feminino
 
