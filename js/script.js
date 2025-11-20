@@ -181,7 +181,13 @@ const newsData = [
 
 ]; */
 const videosData = [
-   {},
+   {
+        title: "Samgrowthlabs",
+        url: "../fotos/videos/samgrowthlabs.mp4", // Substitua pela URL do seu vídeo
+        description: "Como é o samgrowthlabs hoje",
+        type: "samgrowthlabs",
+        duration: "15s"
+    }
 
 ];
 
