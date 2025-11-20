@@ -183,7 +183,7 @@ const newsData = [
 const videosData = [
    {
     title: "Video de samgrowthlabs",
-    url: "https://player.cloudinary.com/embed/?cloud_name=dlk1ke395&public_id=samgrowthlabs_qqclbv&profile=cld-default",
+    url: "https://res.cloudinary.com/dlk1ke395/video/upload/v1763611820/samgrowthlabs_qqclbv.mp4",
     description: "",
     type: "passado",
     duration: "20s"
