@@ -44,6 +44,9 @@ let afiliateData = [];
  */
 let videosData = [];
 
+// Variável global para controlar a notícia atual no modal
+let currentNewsInModal = null;
+
 /**
  * Dados das notícias (fixas no código)
  * @type {Array}
@@ -621,90 +624,678 @@ function loadAffiliates() {
     });
 }
 
+
 /**
- * Carrega notícias ordenadas por prioridade
+ * Carrega notícias do banco de dados - CORRIGIDO para sua estrutura de tabela
  */
-function loadNewsByPriority() {
-    const container = document.getElementById('news-container');
-    if (!container) return;
-    
-    const sortedNews = [...newsData].sort((a, b) => b.priority - a.priority);
-    container.innerHTML = '';
-    
-    sortedNews.forEach(news => {
-        const newsCard = document.createElement('div');
-        newsCard.className = 'news-card';
+async function loadNewsFromDB() {
+    try {
+        console.log('Iniciando carregamento de notícias...');
         
-        const priorityBadge = news.priority >= 4 ? `<div class="priority-badge priority-${news.priority}">Destaque</div>` : '';
-        
-        const mediaContent = news.video 
-            ? `<div class="news-video">
-                  <div class="video-badge">VÍDEO</div>
-                  <video controls>
-                      <source src="${news.video}" type="video/mp4">
-                      Seu navegador não suporta o elemento de vídeo.
-                  </video>
-              </div>`
-            : `<div class="news-image">
-                  <img src="${news.image}" alt="${news.title}">
-              </div>`;
-        
-        newsCard.innerHTML = `
-            ${priorityBadge}
-            ${mediaContent}
-            <div class="news-content">
-                <div class="news-date">${news.date}</div>
-                <h3>${news.title}</h3>
-                <p>${news.content}</p>
-                <div class="news-priority">Prioridade: ${news.priority}/5</div>
-            </div>
-        `;
-        
-        container.appendChild(newsCard);
-    });
+        const res = await fetch(
+            "https://ryqlprvtsqzydvfkzuhu.supabase.co/functions/v1/clever-handler?action=get_news",
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+
+        if (!res.ok) {
+            throw new Error(`Erro HTTP: ${res.status}`);
+        }
+
+        const data = await res.json();
+        console.log("NEWS carregadas:", data.news);
+
+        // Renderizar na tela
+        renderNews(data.news);
+
+    } catch (err) {
+        console.error("Erro ao carregar notícias:", err);
+        showErrorNews();
+    }
 }
 
 /**
- * Carrega notícias em destaque na página inicial
+ * Mostra mensagem de erro se não carregar notícias
  */
-function loadFeaturedNews() {
-    const container = document.getElementById('featured-news-container');
+function showErrorNews() {
+    const container = document.getElementById("news-container");
     if (!container) return;
+
+    container.innerHTML = `
+        <div class="error-state">
+            <div class="error-icon">📰</div>
+            <h3>Erro ao carregar notícias</h3>
+            <p>Não foi possível carregar as notícias no momento.</p>
+            <button onclick="loadNewsFromDB()" class="retry-btn">
+                🔄 Tentar Novamente
+            </button>
+        </div>
+    `;
+}
+
+
+
+
+async function loadNewsFromDB() {
+    try {
+        const res = await fetch(
+            "https://ryqlprvtsqzydvfkzuhu.supabase.co/functions/v1/clever-handler?action=get_news",
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+
+        const data = await res.json();
+        console.log("NEWS carregadas:", data.news);
+
+        // Renderizar na tela
+        renderNews(data.news);
+
+    } catch (err) {
+        console.error("Erro ao carregar notícias:", err);
+    }
+}
+
+/**
+ * Configura os eventos de avaliação
+ */
+function setupRatingEvents() {
+    // Event delegation para os botões de like/dislike nos cards
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.rating-btn')) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const button = e.target.closest('.rating-btn');
+            const card = button.closest('.news-card');
+            const newsId = card.getAttribute('data-news-id');
+            const voteType = button.classList.contains('like-btn') ? 'like' : 'dislike';
+            
+            rateNews(newsId, voteType);
+        }
+    });
+
+    // Eventos específicos para o modal
+    const modalLikeBtn = document.getElementById('modal-like-btn');
+    const modalDislikeBtn = document.getElementById('modal-dislike-btn');
     
-    const featuredNews = newsData.filter(news => news.priority === 5);
-    container.innerHTML = '';
+    if (modalLikeBtn) {
+        modalLikeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (currentNewsInModal) {
+                rateNewsInModal(currentNewsInModal.id, 'like');
+            }
+        });
+    }
     
-    if (featuredNews.length === 0) return;
-    
-    featuredNews.forEach(news => {
-        const newsCard = document.createElement('div');
-        newsCard.className = 'featured-news-card';
+    if (modalDislikeBtn) {
+        modalDislikeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (currentNewsInModal) {
+                rateNewsInModal(currentNewsInModal.id, 'dislike');
+            }
+        });
+    }
+}
+
+
+
+/**
+ * Abre o modal da notícia com a estrutura da SUA tabela
+ */
+function openNewsModal(news) {
+    const modal = document.getElementById('news-modal');
+    const modalTitle = document.getElementById('modal-news-title');
+    const modalDate = document.getElementById('modal-news-date');
+    const modalMedia = document.getElementById('modal-news-media');
+    const modalDescription = document.getElementById('modal-news-description');
+    const modalLikesCount = document.getElementById('modal-likes-count');
+    const modalDislikesCount = document.getElementById('modal-dislikes-count');
+    const modalLikeBtn = document.getElementById('modal-like-btn');
+    const modalDislikeBtn = document.getElementById('modal-dislike-btn');
+
+    if (!modal || !modalTitle) return;
+
+    try {
+        // Preencher dados básicos
+        modalTitle.textContent = news.title;
+        modalDate.textContent = formatNewsDate(news.created_at);
+        modalDescription.textContent = news.description;
+        modalLikesCount.textContent = news.likes || 0;
+        modalDislikesCount.textContent = news.dislikes || 0;
+
+        // Configurar mídia com tratamento de erro - USANDO OS CAMPOS DA SUA TABELA
+        const hasVideo = news.video && isValidUrl(news.video);
+        const hasImage = news.image && isValidUrl(news.image);
+
+        if (hasVideo) {
+            modalMedia.innerHTML = `
+                <div class="news-modal-video">
+                    <video controls autoplay onerror="handleModalVideoError(this)">
+                        <source src="${news.video}" type="video/mp4">
+                        Seu navegador não suporta o elemento de vídeo.
+                    </video>
+                    <div class="media-badge video-badge">VÍDEO</div>
+                </div>
+            `;
+        } else if (hasImage) {
+            modalMedia.innerHTML = `
+                <div class="news-modal-image">
+                    <img src="${news.image}" alt="${news.title}" 
+                         onerror="handleModalImageError(this)">
+                    <div class="media-badge image-badge">IMAGEM</div>
+                </div>
+            `;
+        } else {
+            modalMedia.innerHTML = `
+                <div class="fallback-media large">
+                    <i class="fas fa-newspaper"></i>
+                    <span>${news.title}</span>
+                </div>
+            `;
+        }
+
+        // Verificar se o usuário já votou
+        const userVote = localStorage.getItem(`news_vote_${news.id}`);
         
-        const mediaContent = news.video 
-            ? `<div class="featured-news-video">
-                  <div class="video-badge">VÍDEO</div>
-                  <video controls>
-                      <source src="${news.video}" type="video/mp4">
-                      Seu navegador não suporta o elemento de vídeo.
-                  </video>
-              </div>`
-            : `<div class="featured-news-image">
-                  <img src="${news.image}" alt="${news.title}">
-              </div>`;
+        // Resetar estados dos botões
+        modalLikeBtn.classList.remove('voted', 'disabled');
+        modalDislikeBtn.classList.remove('voted', 'disabled');
         
-        newsCard.innerHTML = `
-            ${mediaContent}
-            <div class="featured-news-content">
-                <div class="featured-news-date">${news.date}</div>
-                <h3>${news.title}</h3>
-                <p>${news.content}</p>
-                <a href="noticia.html" class="btn btn-outline">Ver Todas as Notícias</a>
+        // Aplicar estados baseados no voto existente
+        if (userVote) {
+            if (userVote === 'like') {
+                modalLikeBtn.classList.add('voted');
+            } else {
+                modalDislikeBtn.classList.add('voted');
+            }
+            modalLikeBtn.disabled = true;
+            modalDislikeBtn.disabled = true;
+        } else {
+            modalLikeBtn.disabled = false;
+            modalDislikeBtn.disabled = false;
+        }
+
+        // Configurar eventos dos botões no modal
+        modalLikeBtn.onclick = () => rateNewsInModal(news.id, 'like');
+        modalDislikeBtn.onclick = () => rateNewsInModal(news.id, 'dislike');
+
+        // Abrir modal
+        modal.style.display = 'block';
+
+    } catch (error) {
+        console.error('Erro ao abrir modal:', error);
+    }
+}
+
+/**
+ * Trata erro de vídeo no modal
+ */
+function handleModalVideoError(videoElement) {
+    const container = videoElement.closest('.news-modal-video');
+    if (container) {
+        container.innerHTML = `
+            <div class="fallback-media large">
+                <i class="fas fa-video-slash"></i>
+                <span>Vídeo não disponível</span>
             </div>
         `;
+    }
+}
+
+/**
+ * Trata erro de imagem no modal
+ */
+function handleModalImageError(imgElement) {
+    const container = imgElement.closest('.news-modal-image');
+    if (container) {
+        container.innerHTML = `
+            <div class="fallback-media large">
+                <i class="fas fa-image"></i>
+                <span>Imagem não disponível</span>
+            </div>
+        `;
+    }
+}
+
+// Adicione também este CSS para os estados de fallback:
+
+const fallbackCSS = `
+    .fallback-media {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        gap: 10px;
+    }
+    
+    .fallback-media.large {
+        height: 300px;
+    }
+    
+    .fallback-media i {
+        font-size: 3rem;
+        opacity: 0.8;
+    }
+    
+    .fallback-media span {
+        font-size: 1rem;
+        text-align: center;
+        max-width: 80%;
+    }
+    
+    .loading-state, .error-state, .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 60px 20px;
+    }
+    
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #e2e8f0;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .error-icon, .empty-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        opacity: 0.7;
+    }
+    
+    .retry-btn {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1rem;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .retry-btn:hover {
+        background: #764ba2;
+        transform: translateY(-2px);
+    }
+`;
+
+// Injeta o CSS fallback
+const style = document.createElement('style');
+style.textContent = fallbackCSS;
+document.head.appendChild(style);
+
+/**
+ * Avalia notícia de forma unificada
+ */
+async function rateNews(newsId, voteType) {
+    const storageKey = `news_vote_${newsId}`;
+    const oldVote = localStorage.getItem(storageKey);
+
+    // Não permite mudar voto se já votou no mesmo
+    if (oldVote === voteType) {
+        console.log("Usuário já votou isso.");
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            "https://ryqlprvtsqzydvfkzuhu.supabase.co/functions/v1/clever-handler?action=rate_news",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id: parseInt(newsId),
+                    from: oldVote,
+                    to: voteType,
+                    action: oldVote ? "change" : "add"
+                })
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error('Erro na requisição');
+        }
+
+        // Atualizar localStorage
+        localStorage.setItem(storageKey, voteType);
+
+        // Recarregar notícias para atualizar UI
+        loadNewsFromDB();
+
+    } catch (err) {
+        console.error("Erro ao avaliar notícia:", err);
+        alert('Erro ao enviar avaliação. Tente novamente.');
+    }
+}
+
+/**
+ * Avalia notícia no modal
+ */
+async function rateNewsInModal(newsId, voteType) {
+    await rateNews(newsId, voteType);
+    
+    // Feedback visual no modal
+    const button = voteType === 'like' ? 
+        document.getElementById('modal-like-btn') : 
+        document.getElementById('modal-dislike-btn');
+    
+    if (button) {
+        button.classList.add('voted');
+        button.disabled = true;
         
-        container.appendChild(newsCard);
+        // Atualizar contador visualmente
+        const countSpan = button.querySelector('span');
+        if (countSpan) {
+            const currentCount = parseInt(countSpan.textContent) || 0;
+            countSpan.textContent = currentCount + 1;
+        }
+    }
+}
+
+/**
+ * Mostra feedback visual do voto
+ */
+function showVoteFeedback(voteType) {
+    const modal = document.getElementById('news-modal');
+    const feedback = document.createElement('div');
+    feedback.className = `vote-feedback ${voteType}`;
+    feedback.textContent = voteType === 'like' ? '👍 Curtiu!' : '👎 Não curtiu!';
+    
+    modal.querySelector('.news-modal-footer').appendChild(feedback);
+    
+    setTimeout(() => {
+        feedback.remove();
+    }, 2000);
+}
+
+/**
+ * Fecha o modal de notícias
+ */
+function closeNewsModal() {
+    const modal = document.getElementById('news-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        
+        // Parar vídeo se estiver tocando
+        const video = modal.querySelector('video');
+        if (video) {
+            video.pause();
+            video.currentTime = 0;
+        }
+    }
+}
+
+/**
+ * Configura o modal de notícias
+ */
+function setupNewsModal() {
+    const modal = document.getElementById('news-modal');
+    const closeBtn = modal.querySelector('.close-modal');
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeNewsModal);
+    }
+    
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            closeNewsModal();
+        }
+    });
+    
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && modal.style.display === 'block') {
+            closeNewsModal();
+        }
     });
 }
+
+/*
+ * Renderiza notícias com a estrutura correta da sua tabela
+ */
+function renderNews(newsList) {
+    const container = document.getElementById("news-container");
+    if (!container) return;
+
+    // Mostrar loading
+    container.innerHTML = `
+        <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Carregando notícias...</p>
+        </div>
+    `;
+
+    // Delay para garantir que o loading seja visível
+    setTimeout(() => {
+        if (!newsList || newsList.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">📝</div>
+                    <h3>Nenhuma notícia disponível</h3>
+                    <p>Volte em breve para novas atualizações.</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = "";
+
+        // Ordenar por prioridade (maior primeiro) e depois por data (mais recente primeiro)
+        const sortedNews = [...newsList].sort((a, b) => {
+            if (b.priority !== a.priority) {
+                return b.priority - a.priority;
+            }
+            return new Date(b.created_at) - new Date(a.created_at);
+        });
+
+        sortedNews.forEach(news => {
+            const card = createNewsCard(news);
+            container.appendChild(card);
+        });
+    }, 500);
+}
+
+/**
+ * Cria um card de notícia individual - CORRIGIDO para sua estrutura
+ */
+function createNewsCard(news) {
+    const card = document.createElement("div");
+    card.className = "news-card clickable";
+
+    // Determinar tipo de mídia baseado nos campos da SUA tabela
+    const hasVideo = news.video && isValidUrl(news.video);
+    const hasImage = news.image && isValidUrl(news.image);
+
+    // Criar conteúdo de mídia com fallback
+    const media = hasVideo ? createVideoElement(news) : 
+                 hasImage ? createImageElement(news) : 
+                 createFallbackMedia(news);
+
+    // Verificar se o usuário já votou
+    const userVote = localStorage.getItem(`news_vote_${news.id}`);
+
+    card.innerHTML = `
+        ${media}
+
+        <div class="news-content">
+            <h3>${escapeHtml(news.title)}</h3>
+            <p>${escapeHtml(news.description)}</p>
+
+            <div class="news-footer">
+                <span class="news-date">
+                    ${formatNewsDate(news.created_at)}
+                </span>
+                
+                ${news.priority >= 4 ? `<span class="priority-badge priority-${news.priority}">Destaque</span>` : ''}
+
+                <div class="rating-box">
+                    <button 
+                        onclick="event.stopPropagation(); rateNews(${news.id}, 'like')" 
+                        class="rating-btn like-btn ${userVote === 'like' ? 'voted' : ''}"
+                        ${userVote ? "disabled" : ""}
+                    >
+                        👍 ${news.likes || 0}
+                    </button>
+
+                    <button 
+                        onclick="event.stopPropagation(); rateNews(${news.id}, 'dislike')" 
+                        class="rating-btn dislike-btn ${userVote === 'dislike' ? 'voted' : ''}"
+                        ${userVote ? "disabled" : ""}
+                    >
+                        👎 ${news.dislikes || 0}
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Tornar o card clicável para abrir o modal
+    card.addEventListener('click', function(e) {
+        if (!e.target.closest('button')) {
+            openNewsModal(news);
+        }
+    });
+
+    return card;
+}
+
+/**
+ * Cria elemento de vídeo com a estrutura da SUA tabela
+ */
+function createVideoElement(news) {
+    return `
+        <div class="news-video">
+            <div class="video-play-icon">
+                <i class="fas fa-play"></i>
+            </div>
+            <video preload="metadata" onerror="handleVideoError(this)">
+                <source src="${news.video}" type="video/mp4">
+                Seu navegador não suporta o vídeo.
+            </video>
+            <div class="media-badge video-badge">VÍDEO</div>
+        </div>
+    `;
+}
+
+/**
+ * Cria elemento de imagem com a estrutura da SUA tabela
+ */
+function createImageElement(news) {
+    return `
+        <div class="news-image">
+            <img 
+                src="${news.image}" 
+                alt="${escapeHtml(news.title)}"
+                loading="lazy"
+                onerror="handleImageError(this)"
+            >
+            <div class="media-badge image-badge">IMAGEM</div>
+        </div>
+    `;
+}
+/*
+ * Cria mídia fallback quando não há imagem ou vídeo
+ */
+function createFallbackMedia(news) {
+    return `
+        <div class="news-image">
+            <div class="fallback-media">
+                <i class="fas fa-newspaper"></i>
+                <span>${escapeHtml(news.title)}</span>
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Trata erro de carregamento de vídeo
+ */
+function handleVideoError(videoElement) {
+    console.warn('Erro ao carregar vídeo:', videoElement.querySelector('source').src);
+    const container = videoElement.closest('.news-video');
+    if (container) {
+        container.innerHTML = `
+            <div class="fallback-media">
+                <i class="fas fa-video-slash"></i>
+                <span>Vídeo não disponível</span>
+            </div>
+        `;
+    }
+}
+
+/**
+ * Trata erro de carregamento de imagem
+ */
+function handleImageError(imgElement) {
+    console.warn('Erro ao carregar imagem:', imgElement.src);
+    const container = imgElement.closest('.news-image');
+    if (container) {
+        container.innerHTML = `
+            <div class="fallback-media">
+                <i class="fas fa-image"></i>
+                <span>Imagem não disponível</span>
+            </div>
+        `;
+    }
+}
+
+// Funções auxiliares (mantenha as mesmas)
+function isValidUrl(string) {
+    try {
+        new URL(string);
+        return true;
+    } catch (_) {
+        return false;
+    }
+}
+
+/**
+ * Escapa HTML para prevenir XSS
+ */
+function escapeHtml(unsafe) {
+    if (!unsafe) return '';
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+/**
+ * Formata data da notícia
+ */
+function formatNewsDate(dateString) {
+    try {
+        return new Date(dateString).toLocaleDateString("pt-BR", {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    } catch (error) {
+        return 'Data inválida';
+    }
+}
+
 
 /**
  * Carrega todos os vídeos
@@ -1630,7 +2221,6 @@ document.addEventListener('DOMContentLoaded', function() {
             mobileMenu.classList.toggle('active');
         });
         
-        // Fechar menu ao clicar em um link
         const navLinks = document.querySelectorAll('nav ul li a');
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -1670,9 +2260,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Carregar notícias (página de notícias)
     if (document.getElementById('news-container')) {
-        loadNewsByPriority();
+        /*setupNewsModal(); // Configurar o modal de notícias
+        loadNewsFromDB(); // Carregar as notícias
+        
+        // Também carregar vídeos se existir a seção
+        if (document.getElementById('videos-container')) {
+            loadVideosFromDB().then(() => {
+                loadVideos();
+            });
+        }*/
     }
     
     // Carregar notícias em destaque (página inicial)

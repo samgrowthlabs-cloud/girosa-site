@@ -10,7 +10,8 @@
 <body>
     <!-- Header e Navegação -->
     <header>
-    <div id="header-placeholder"></div>
+        <div id="header-placeholder"></div>
+    </header>
 
     <!-- Seção Hero -->
     <section class="page-hero">
@@ -20,41 +21,76 @@
         </div>
     </section>
 
-        <!-- Seção Notícias -->
+    <!-- Seção Notícias -->
     <section id="news">
         <div class="news-grid" id="news-container">
             <!-- As notícias serão carregadas aqui por ordem de prioridade -->
         </div>
     </section>
 
-    <!-- Seção Vídeos -->
-    <section class="videos-section">
-        <div class="videos-container">
-            <h2 class="section-title">Nossos Vídeos</h2>
-            <div class="videos-grid" id="videos-container">
-                <!-- Todos os vídeos serão carregados aqui -->
+    <!-- Modal para Notícias - Estilo Rede Social -->
+    <div id="news-modal" class="modal">
+        <div class="news-modal-content">
+            <!-- Header -->
+            <div class="news-modal-header">
+                <div class="modal-avatar">GB</div>
+                <div class="modal-user-info">
+                    <div class="modal-username">girosabeauty</div>
+                    <div class="modal-date" id="modal-news-date"></div>
+                </div>
+                <button class="close-modal">&times;</button>
             </div>
-        </div>
-    </section>
 
-    <!-- Área de Destaques -->
-    <section class="content-addition-area">
-        <div class="highlights-container">
-            <div class="highlight-card">
-                <div class="highlight-content">
-                    <h3>Afiliado Destaque do Mês</h3>
-                    <p>Parabenizamos <strong>Maria Silva</strong>, nossa afiliada TOP do mês! Ela conseguiu aumentar suas vendas em 50%.</p>
+            <!-- Body -->
+            <div class="news-modal-body">
+                <!-- Container de Mídia -->
+                <div class="modal-media-container" id="modal-news-media">
+                    <!-- Imagem ou vídeo será inserido aqui -->
                 </div>
-            </div>
-            
-            <div class="highlight-card">
-                <div class="highlight-content">
-                    <h3>Subiu de Nível</h3>
-                    <p><strong>João Santos</strong> subiu de afiliado BAS para INT este mês. Parabéns pelo crescimento!</p>
+
+                <!-- Sidebar (Instagram Style) -->
+                <div class="modal-sidebar">
+                    <!-- Ações -->
+                    <div class="modal-actions">
+                        <div class="modal-action-buttons">
+                            <button class="modal-action-btn like-btn" id="modal-like-btn">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <button class="modal-action-btn comment-btn">
+                                <i class="far fa-comment"></i>
+                            </button>
+                            <button class="modal-action-btn share-btn">
+                                <i class="far fa-paper-plane"></i>
+                            </button>
+                            <button class="modal-action-btn save-btn" style="margin-left: auto;">
+                                <i class="far fa-bookmark"></i>
+                            </button>
+                        </div>
+                        <div class="modal-likes">
+                            <span id="modal-likes-count">0</span> curtidas
+                        </div>
+                    </div>
+
+                    <!-- Descrição -->
+                    <div class="modal-description">
+                        <div class="modal-username" style="display: inline; font-weight: 600; margin-right: 5px;">
+                            girosabeauty
+                        </div>
+                        <span class="modal-description-text" id="modal-news-description"></span>
+                        <div class="news-hashtags">#girosabeauty #tranças #beleza</div>
+                    </div>
+
+                    <!-- Comentários -->
+                    <div class="modal-comments">
+                        Ver todos os <span id="modal-comments-count">0</span> comentários
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+
+
+
     <!-- Footer -->
     <div id="footer-placeholder"></div>
 

@@ -1917,3 +1917,554 @@ html {
         height: 36px;
     }
 }
+/* =============================================
+   MODO REDE SOCIAL - INSTAGRAM/TIKTOK STYLE
+   ============================================= */
+
+/* Container Principal no Estilo Rede Social */
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #fafafa;
+}
+
+/* Cards no Estilo Instagram */
+.news-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid #e6e6e6;
+}
+
+.news-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Header do Card (Instagram Style) */
+.news-card-header {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #efefef;
+}
+
+.news-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #ffd200, #f7971e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.news-username {
+    font-weight: 600;
+    color: #262626;
+    font-size: 14px;
+}
+
+.news-date {
+    color: #8e8e8e;
+    font-size: 12px;
+    margin-left: auto;
+}
+
+/* Mídia - Formato Rede Social */
+.news-image, .news-video {
+    position: relative;
+    width: 100%;
+    background: #000;
+    aspect-ratio: 1/1; /* Quadrado como Instagram */
+    overflow: hidden;
+}
+
+.news-image img, .news-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Vídeos com controles customizados */
+.news-video {
+    position: relative;
+}
+
+.news-video video {
+    background: #000;
+}
+
+.video-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    padding: 20px 16px 16px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.news-video:hover .video-controls {
+    opacity: 1;
+}
+
+.video-play-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: #262626;
+}
+
+/* Conteúdo do Card */
+.news-content {
+    padding: 12px 16px;
+}
+
+.news-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #efefef;
+}
+
+.news-actions {
+    display: flex;
+    gap: 16px;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px;
+    transition: transform 0.2s ease;
+}
+
+.action-btn:hover {
+    transform: scale(1.1);
+}
+
+.like-btn { color: #ed4956; }
+.comment-btn { color: #262626; }
+.share-btn { color: #262626; }
+.save-btn { color: #262626; }
+
+.like-btn.active { color: #ed4956; }
+.save-btn.active { color: #262626; }
+
+.news-likes {
+    font-weight: 600;
+    color: #262626;
+    font-size: 14px;
+}
+
+.news-description {
+    color: #262626;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.news-hashtags {
+    color: #00376b;
+    font-size: 14px;
+}
+
+.news-comments {
+    color: #8e8e8e;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+/* =============================================
+   MODAL NO ESTILO REDE SOCIAL
+   ============================================= */
+
+#news-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+}
+
+.news-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    width: 95%;
+    max-width: 800px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Modal Header */
+.news-modal-header {
+    padding: 16px;
+    background: #000;
+    border-bottom: 1px solid #262626;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+}
+
+.modal-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #ffd200, #f7971e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.modal-user-info {
+    flex: 1;
+}
+
+.modal-username {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.modal-date {
+    color: #a8a8a8;
+    font-size: 12px;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+/* Modal Body - Layout Instagram */
+.news-modal-body {
+    display: flex;
+    flex: 1;
+    max-height: calc(90vh - 130px);
+}
+
+.modal-media-container {
+    flex: 1;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.modal-media-container img,
+.modal-media-container video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Modal Sidebar (Instagram Style) */
+.modal-sidebar {
+    width: 340px;
+    background: #000;
+    border-left: 1px solid #262626;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-actions {
+    padding: 16px;
+    border-bottom: 1px solid #262626;
+}
+
+.modal-action-buttons {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.modal-action-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px;
+    transition: transform 0.2s ease;
+}
+
+.modal-action-btn:hover {
+    transform: scale(1.1);
+}
+
+.modal-likes {
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.modal-description {
+    padding: 16px;
+    color: white;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.modal-description-text {
+    line-height: 1.4;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.modal-comments {
+    padding: 16px;
+    border-top: 1px solid #262626;
+    color: #a8a8a8;
+    font-size: 14px;
+}
+
+/* =============================================
+   VÍDEO RESPONSIVO - TIKTOK STYLE
+   ============================================= */
+
+/* Vídeos em formato vertical (9:16) */
+.video-vertical {
+    aspect-ratio: 9/16;
+    max-height: 80vh;
+}
+
+.video-vertical video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Controles de vídeo customizados */
+.custom-video-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.video-container:hover .custom-video-controls {
+    opacity: 1;
+}
+
+.video-progress {
+    width: 100%;
+    height: 3px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 2px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.video-progress-bar {
+    height: 100%;
+    background: #fff;
+    width: 30%;
+    transition: width 0.1s linear;
+}
+
+.video-control-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.video-main-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.video-side-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.video-control-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.video-volume-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.volume-slider {
+    width: 80px;
+    height: 4px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.volume-level {
+    height: 100%;
+    background: #fff;
+    width: 70%;
+}
+
+/* =============================================
+   RESPONSIVIDADE
+   ============================================= */
+
+@media (max-width: 768px) {
+    .news-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 10px;
+    }
+    
+    .news-modal-content {
+        width: 100%;
+        height: 100%;
+        max-height: 100%;
+        border-radius: 0;
+    }
+    
+    .news-modal-body {
+        flex-direction: column;
+        max-height: calc(100vh - 120px);
+    }
+    
+    .modal-sidebar {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid #262626;
+        max-height: 40vh;
+    }
+    
+    .modal-media-container {
+        max-height: 60vh;
+    }
+    
+    /* Vídeos em fullscreen no mobile */
+    .video-mobile-fullscreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1001;
+        background: #000;
+    }
+    
+    .video-mobile-fullscreen video {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+
+@media (max-width: 480px) {
+    .news-card {
+        border-radius: 8px;
+    }
+    
+    .news-content {
+        padding: 10px 12px;
+    }
+    
+    .news-actions {
+        gap: 12px;
+    }
+    
+    .action-btn {
+        font-size: 20px;
+    }
+}
+
+/* =============================================
+   ANIMAÇÕES E INTERAÇÕES
+   ============================================= */
+
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.2); }
+    50% { transform: scale(1.1); }
+    75% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.like-btn.active {
+    animation: heartBeat 0.6s ease;
+}
+
+/* Double tap to like */
+.news-image, .news-video {
+    position: relative;
+}
+
+.double-tap-heart {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-size: 80px;
+    color: white;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.double-tap-heart.active {
+    animation: tapHeart 1s ease;
+}
+
+@keyframes tapHeart {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    15% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
+    30% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
