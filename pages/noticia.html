@@ -28,67 +28,38 @@
         </div>
     </section>
 
-    <!-- Modal para Notícias - Estilo Rede Social -->
+    <!-- Modal para Notícias - CORRIGIDO -->
     <div id="news-modal" class="modal">
         <div class="news-modal-content">
-            <!-- Header -->
-            <div class="news-modal-header">
-                <div class="modal-avatar">GB</div>
-                <div class="modal-user-info">
-                    <div class="modal-username">girosabeauty</div>
-                    <div class="modal-date" id="modal-news-date"></div>
-                </div>
+            <div class="modal-header">
+                <h2 id="modal-news-title"></h2>
+                <div class="modal-date" id="modal-news-date"></div>
                 <button class="close-modal">&times;</button>
             </div>
 
-            <!-- Body -->
-            <div class="news-modal-body">
-                <!-- Container de Mídia -->
-                <div class="modal-media-container" id="modal-news-media">
-                    <!-- Imagem ou vídeo será inserido aqui -->
-                </div>
+            <div class="modal-media" id="modal-news-media">
+                <!-- Mídia será inserida aqui -->
+            </div>
 
-                <!-- Sidebar (Instagram Style) -->
-                <div class="modal-sidebar">
-                    <!-- Ações -->
-                    <div class="modal-actions">
-                        <div class="modal-action-buttons">
-                            <button class="modal-action-btn like-btn" id="modal-like-btn">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <button class="modal-action-btn comment-btn">
-                                <i class="far fa-comment"></i>
-                            </button>
-                            <button class="modal-action-btn share-btn">
-                                <i class="far fa-paper-plane"></i>
-                            </button>
-                            <button class="modal-action-btn save-btn" style="margin-left: auto;">
-                                <i class="far fa-bookmark"></i>
-                            </button>
-                        </div>
-                        <div class="modal-likes">
-                            <span id="modal-likes-count">0</span> curtidas
-                        </div>
-                    </div>
+            <div class="modal-body">
+                <div class="modal-description" id="modal-news-description"></div>
+            </div>
 
-                    <!-- Descrição -->
-                    <div class="modal-description">
-                        <div class="modal-username" style="display: inline; font-weight: 600; margin-right: 5px;">
-                            girosabeauty
-                        </div>
-                        <span class="modal-description-text" id="modal-news-description"></span>
-                        <div class="news-hashtags">#girosabeauty #tranças #beleza</div>
-                    </div>
-
-                    <!-- Comentários -->
-                    <div class="modal-comments">
-                        Ver todos os <span id="modal-comments-count">0</span> comentários
-                    </div>
+            <div class="modal-footer">
+                <div class="modal-reactions">
+                    <button class="modal-reaction-btn like" onclick="handleModalReaction(this, 'like')">
+                        👍 Legal
+                    </button>
+                    <button class="modal-reaction-btn neutral" onclick="handleModalReaction(this, 'neutral')">
+                        😊 Gostei
+                    </button>
+                    <button class="modal-reaction-btn dislike" onclick="handleModalReaction(this, 'dislike')">
+                        ❌ Tanto Faz
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-
 
 
     <!-- Footer -->
