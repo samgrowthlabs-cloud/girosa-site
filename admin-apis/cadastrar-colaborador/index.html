@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Administrativo - Girosa Beauty</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #ffffff;
+            --accent-color: #f8f9fa;
+            --success-color: #22c55e;
+            --warning-color: #eab308;
+            --danger-color: #ef4444;
+            --text-color: #333333;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* Header */
+        .admin-header {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 15px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-section h1 {
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+
+        .logo-section p {
+            font-size: 0.7rem;
+            color: #ccc;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Main Layout */
+        .admin-container {
+            max-width: 1200px;
+            margin: 70px auto 20px;
+            padding: 0 15px;
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--secondary-color);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-card h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #333;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: var(--secondary-color);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            overflow-x: auto;
+            background: var(--secondary-color);
+            border-radius: 10px;
+            padding: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            scrollbar-width: none;
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            white-space: nowrap;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-tab.active {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            background: var(--secondary-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            width: auto;
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background: var(--accent-color);
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        /* Badges */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .badge-admin {
+            background: #000;
+            color: white;
+        }
+
+        .badge-admin- {
+            background: #333;
+            color: white;
+        }
+
+        .badge-gerente {
+            background: #555;
+            color: white;
+        }
+
+        .badge-colaborador {
+            background: #777;
+            color: white;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-icon {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .btn-edit {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-delete {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        /* Forms */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--secondary-color);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            z-index: 3000;
+            max-width: 300px;
+            display: none;
+        }
+
+        .notification.success {
+            background: var(--success-color);
+        }
+
+        .notification.error {
+            background: var(--danger-color);
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 0 10px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .data-table {
+                font-size: 0.8rem;
+            }
+            
+            .data-table th,
+            .data-table td {
+                padding: 8px 5px;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .login-card {
+                padding: 20px;
+            }
+        }
+
+        /* Access Level Restrictions */
+        .restricted {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .no-permission {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .no-permission i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="admin-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <h1>Girosa Beauty Admin</h1>
+                <p>Gerenciado por SamgrowthLabs</p>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <span id="userName">Usuário</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Login Screen -->
+    <div class="admin-container" id="loginScreen">
+        <div class="login-container">
+            <div class="login-card">
+                <h2>Acesso Administrativo</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="cpf">CPF</label>
+                        <input type="text" id="cpf" class="form-control" placeholder="Digite seu CPF" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Código de Acesso</label>
+                        <input type="password" id="password" class="form-control" placeholder="Digite sua senha" required>
+                    </div>
+                    <button type="submit" class="btn" id="loginBtn">
+                        <span class="btn-text">Entrar</span>
+                        <div class="loading" style="display: none;"></div>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="admin-container dashboard" id="dashboard">
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="statEmployees">0</div>
+                <div class="stat-label">Colaboradores</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statBraids">0</div>
+                <div class="stat-label">Serviços</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statPromotions">0</div>
+                <div class="stat-label">Promoções</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statAffiliates">0</div>
+                <div class="stat-label">Afiliados</div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-tab="employees">Colaboradores</div>
+            <div class="nav-tab" data-tab="braids">Serviços</div>
+            <div class="nav-tab" data-tab="promotions">Promoções</div>
+            <div class="nav-tab" data-tab="videos">Vídeos</div>
+            <div class="nav-tab" data-tab="affiliates">Afiliados</div>
+        </div>
+
+        <!-- Content Sections -->
+        <div class="content-section active" id="employees-section">
+            <div class="section-header">
+                <h2 class="section-title">Gerenciar Colaboradores</h2>
+                <button class="btn-sm" id="addEmployeeBtn">Adicionar Colaborador</button>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table" id="employeesTable">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>Cargo</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employeesTableBody">
+                        <!-- Employees will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="content-section" id="braids-section">
+            <div class="section-header">
+                <h2 class="section-title">Gerenciar Serviços</h2>
+                <button class="btn-sm" id="addBraidBtn">Adicionar Serviço</button>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table" id="braidsTable">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="braidsTableBody">
+                        <!-- Braids will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="content-section" id="promotions-section">
+            <div class="section-header">
+                <h2 class="section-title">Gerenciar Promoções</h2>
+                <button class="btn-sm" id="addPromotionBtn">Adicionar Promoção</button>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table" id="promotionsTable">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Desconto Geral</th>
+                            <th>Desconto Feminino</th>
+                            <th>Desconto Masculino</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="promotionsTableBody">
+                        <!-- Promotions will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="content-section" id="videos-section">
+            <div class="section-header">
+                <h2 class="section-title">Gerenciar Vídeos</h2>
+                <button class="btn-sm" id="addVideoBtn">Adicionar Vídeo</button>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table" id="videosTable">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Tipo</th>
+                            <th>Duração</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="videosTableBody">
+                        <!-- Videos will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="content-section" id="affiliates-section">
+            <div class="section-header">
+                <h2 class="section-title">Gerenciar Afiliados</h2>
+                <button class="btn-sm" id="addAffiliateBtn">Adicionar Afiliado</button>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table" id="affiliatesTable">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>Tipo</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="affiliatesTableBody">
+                        <!-- Affiliates will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Employee Modal -->
+    <div class="modal" id="employeeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="employeeModalTitle">Adicionar Colaborador</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="employeeForm">
+                    <input type="hidden" id="employeeId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="employeeName">Nome</label>
+                            <input type="text" id="employeeName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="employeeCpf">CPF</label>
+                            <input type="text" id="employeeCpf" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="employeeRole">Cargo</label>
+                            <select id="employeeRole" class="form-control" required>
+                                <option value="">Selecione um cargo</option>
+                                <option value="colaborador">Colaborador</option>
+                                <option value="gerente">Gerente</option>
+                                <option value="admin-">Admin-</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="employeeCode">Código</label>
+                            <input type="text" id="employeeCode" class="form-control" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-sm" id="cancelEmployeeBtn">Cancelar</button>
+                <button class="btn-sm" id="saveEmployeeBtn">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Configuration
+        const API_BASE = 'https://ryqlprvtsqzydvfkzuhu.supabase.co/functions/v1/clever-handler';
+        const ROLE_LEVEL = {
+            'admin': 4,
+            'admin-': 3,
+            'gerente': 2,
+            'colaborador': 1
+        };
+
+        // State
+        let currentUser = null;
+        let authToken = null;
+
+        // DOM Elements
+        const loginScreen = document.getElementById('loginScreen');
+        const dashboard = document.getElementById('dashboard');
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const userAvatar = document.getElementById('userAvatar');
+        const userName = document.getElementById('userName');
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            setupEventListeners();
+        });
+
+        // Check if user is already logged in
+        function checkAuth() {
+            const token = localStorage.getItem('adminToken');
+            const user = localStorage.getItem('adminUser');
+            
+            if (token && user) {
+                authToken = token;
+                currentUser = JSON.parse(user);
+                showDashboard();
+                loadDashboardData();
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Login form
+            loginForm.addEventListener('submit', handleLogin);
+            
+            // Navigation tabs
+            navTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+            
+            // Modal close buttons
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', closeModals);
+            });
+            
+            // Cancel buttons
+            document.getElementById('cancelEmployeeBtn').addEventListener('click', closeModals);
+        }
+
+        // Handle login
+        async function handleLogin(e) {
+            e.preventDefault();
+
+            const cpf = document.getElementById('cpf').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            if (!cpf || !password) {
+                showNotification("Preencha todos os campos!", "error");
+                return;
+            }
+
+            const btnText = loginBtn.querySelector('.btn-text');
+            const loading = loginBtn.querySelector('.loading');
+            btnText.style.display = 'none';
+            loading.style.display = 'block';
+            loginBtn.disabled = true;
+
+            try {
+                const res = await fetch(`${API_BASE}?action=login`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "apikey": "SUA_PUBLIC_ANON_KEY"
+                    },
+                    body: JSON.stringify({
+                        cpf,
+                        senha: password   // SENHA = CÓDIGO
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.error) throw new Error(data.error);
+
+                authToken = data.token;
+                currentUser = data.user;
+
+                localStorage.setItem("adminToken", authToken);
+                localStorage.setItem("adminUser", JSON.stringify(currentUser));
+
+                showDashboard();
+                loadDashboardData();
+
+                showNotification("Login realizado!", "success");
+
+            } catch (err) {
+                showNotification(err.message, "error");
+            } finally {
+                btnText.style.display = 'block';
+                loading.style.display = 'none';
+                loginBtn.disabled = false;
+            }
+        }
+
+
+        // Show dashboard
+        function showDashboard() {
+            loginScreen.style.display = 'none';
+            dashboard.style.display = 'block';
+            
+            // Update user info
+            userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+            userName.textContent = currentUser.name;
+            
+            // Apply role-based restrictions
+            applyRoleRestrictions();
+        }
+
+        // Apply role-based restrictions
+        function applyRoleRestrictions() {
+            const userLevel = ROLE_LEVEL[currentUser.role];
+            
+            // Hide/show tabs based on permissions
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                const tabId = tab.getAttribute('data-tab');
+                
+                // Colaborador can only view
+                if (userLevel === 1) {
+                    if (tabId !== 'employees') {
+                        tab.style.display = 'none';
+                    }
+                }
+            });
+            
+            // Hide action buttons for colaborador
+            if (userLevel === 1) {
+                document.querySelectorAll('.btn-sm').forEach(btn => {
+                    btn.style.display = 'none';
+                });
+            }
+        }
+
+        // Switch between tabs
+        function switchTab(tabId) {
+            // Update active tab
+            navTabs.forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('data-tab') === tabId) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            // Show active section
+            contentSections.forEach(section => {
+                section.classList.remove('active');
+                if (section.id === `${tabId}-section`) {
+                    section.classList.add('active');
+                }
+            });
+            
+            // Load data for the tab if needed
+            loadTabData(tabId);
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                const response = await fetch(`${API_BASE}?action=get_all`);
+                const data = await response.json();
+                
+                // Update stats
+                document.getElementById('statEmployees').textContent = data.employees?.length || 0;
+                document.getElementById('statBraids').textContent = data.braids?.length || 0;
+                document.getElementById('statPromotions').textContent = data.promotions?.length || 0;
+                document.getElementById('statAffiliates').textContent = data.afiliate?.length || 0;
+                
+                // Load employees table
+                loadEmployeesTable(data.employees);
+                
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                showNotification('Erro ao carregar dados', 'error');
+            }
+        }
+
+        // Load tab-specific data
+        function loadTabData(tabId) {
+            // This would be expanded to load data for each tab
+            // For now, we're loading all data at once in loadDashboardData
+        }
+
+        // Load employees table
+        function loadEmployeesTable(employees) {
+            const tbody = document.getElementById('employeesTableBody');
+            tbody.innerHTML = '';
+            
+            if (!employees || employees.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Nenhum colaborador encontrado</td></tr>';
+                return;
+            }
+            
+            employees.forEach(employee => {
+                const tr = document.createElement('tr');
+                
+                // Determine badge class based on role
+                let badgeClass = 'badge-colaborador';
+                if (employee.role === 'admin') badgeClass = 'badge-admin';
+                else if (employee.role === 'admin-') badgeClass = 'badge-admin-';
+                else if (employee.role === 'gerente') badgeClass = 'badge-gerente';
+                
+                tr.innerHTML = `
+                    <td>${employee.name}</td>
+                    <td>${employee.cpf}</td>
+                    <td><span class="badge ${badgeClass}">${employee.role}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon btn-edit" data-id="${employee.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon btn-delete" data-id="${employee.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+            
+            // Add event listeners to action buttons
+            document.querySelectorAll('.btn-edit').forEach(btn => {
+                btn.addEventListener('click', () => editEmployee(btn.getAttribute('data-id')));
+            });
+            
+            document.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.addEventListener('click', () => deleteEmployee(btn.getAttribute('data-id')));
+            });
+        }
+
+        // Edit employee
+        function editEmployee(id) {
+            // Implementation for editing employee
+            showNotification('Funcionalidade em desenvolvimento', 'success');
+        }
+
+        // Delete employee
+        async function deleteEmployee(id) {
+            if (!confirm('Tem certeza que deseja excluir este colaborador?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}?action=delete_employee&id=${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                showNotification('Colaborador excluído com sucesso', 'success');
+                loadDashboardData(); // Reload data
+                
+            } catch (error) {
+                showNotification(error.message, 'error');
+            }
+        }
+
+        // Close all modals
+        function closeModals() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Logout function (could be added to a logout button)
+        function logout() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+            authToken = null;
+            currentUser = null;
+            dashboard.style.display = 'none';
+            loginScreen.style.display = 'block';
+            loginForm.reset();
+        }
+    </script>
+</body>
+</html>

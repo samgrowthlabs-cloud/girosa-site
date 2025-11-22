@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin • Serviços</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            background: #f6f6f6;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            padding: 15px;
+        }
+
+        h2 {
+            margin-top: 25px;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 14px;
+            margin: 7px 0;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        /* Lista como cartões */
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 12px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .1);
+            display: flex;
+            gap: 12px;
+        }
+
+        .card img {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .info {
+            flex: 1;
+        }
+
+        .title {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .btn-edit {
+            background: #ffaa00;
+            padding: 8px 10px;
+            border-radius: 6px;
+            color: white;
+            border: none;
+            flex: 1;
+        }
+
+        .btn-delete {
+            background: #ff4444;
+            padding: 8px 10px;
+            border-radius: 6px;
+            color: white;
+            border: none;
+            flex: 1;
+        }
+
+        /* MODAL */
+        #edit-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #edit-box {
+            background: white;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 12px;
+        }
+
+        .btn-cancel {
+            background: #666;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Cadastrar Serviço</h2>
+
+        <form id="service-form">
+            <input type="text" id="code" placeholder="Código" required>
+            <input type="text" id="title" placeholder="Título" required>
+            <input type="text" id="description" placeholder="Descrição" required>
+            <input type="text" id="price" placeholder="Preço" required>
+            <input type="text" id="image" placeholder="URL da Imagem" required>
+
+            <select id="category">
+                <option value="feminino">Feminino</option>
+                <option value="masculino">Masculino</option>
+            </select>
+
+            <button type="submit">Cadastrar</button>
+        </form>
+
+        <h2>Serviços</h2>
+
+        <div id="service-list"></div>
+    </div>
+
+    <!-- MODAL DE EDIÇÃO -->
+    <div id="edit-modal">
+        <div id="edit-box">
+            <h3>Editar Serviço</h3>
+            <input type="text" id="edit-code">
+            <input type="text" id="edit-title">
+            <input type="text" id="edit-description">
+            <input type="text" id="edit-price">
+            <input type="text" id="edit-image">
+
+            <select id="edit-category">
+                <option value="feminino">Feminino</option>
+                <option value="masculino">Masculino</option>
