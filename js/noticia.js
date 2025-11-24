@@ -709,3 +709,299 @@ newsStyle.textContent = `
     }
 `;
 document.head.appendChild(newsStyle);
+
+// =============================================
+// SISTEMA DE COMPARTILHAMENTO DE NOTÍCIAS - CORRIGIDO COM LINKS
+// =============================================
+
+/**
+ * Gera URL única para a notícia
+ */
+function generateNewsUrl(newsId) {
+    const baseUrl = window.location.origin + window.location.pathname;
+    return `${baseUrl}?news=${newsId}&utm_source=share&utm_medium=social&utm_campaign=news_sharing`;
+}
+
+/**
+ * Compartilha notícia no WhatsApp - CORRIGIDO COM LINK
+ */
+function shareOnWhatsApp() {
+    if (!currentModalNews) return;
+    
+    const news = currentModalNews;
+    const newsUrl = generateNewsUrl(news.id);
+    const shareText = `📰 *${news.title}*
+
+${news.description || 'Confira esta notícia incrível!'}
+
+💇 *Girosa Beauty*
+_Transformando sua beleza com excelência_
+
+🔗 ${newsUrl}`;
+
+    const encodedText = encodeURIComponent(shareText);
+    const whatsappUrl = `https://wa.me/?text=${encodedText}`;
+    
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+    
+    // Tracking de compartilhamento
+    trackShare('whatsapp', news.id);
+}
+
+/**
+ * Compartilha notícia no Facebook - CORRIGIDO COM LINK
+ */
+function shareOnFacebook() {
+    if (!currentModalNews) return;
+    
+    const news = currentModalNews;
+    const newsUrl = generateNewsUrl(news.id);
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(newsUrl)}`;
+    
+    window.open(facebookUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
+    
+    // Tracking de compartilhamento
+    trackShare('facebook', news.id);
+}
+
+/**
+ * Compartilha notícia no Twitter - NOVA FUNÇÃO
+ */
+function shareOnTwitter() {
+    if (!currentModalNews) return;
+    
+    const news = currentModalNews;
+    const newsUrl = generateNewsUrl(news.id);
+    const shareText = `${news.title} - Girosa Beauty`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(newsUrl)}`;
+    
+    window.open(twitterUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
+    
+    trackShare('twitter', news.id);
+}
+
+/**
+ * Compartilha notícia no LinkedIn - NOVA FUNÇÃO
+ */
+function shareOnLinkedIn() {
+    if (!currentModalNews) return;
+    
+    const news = currentModalNews;
+    const newsUrl = generateNewsUrl(news.id);
+    const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(newsUrl)}`;
+    
+    window.open(linkedinUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
+    
+    trackShare('linkedin', news.id);
+}
+
+/**
+ * Compartilha notícia via Email - NOVA FUNÇÃO
+ */
+function shareOnEmail() {
+    if (!currentModalNews) return;
+    
+    const news = currentModalNews;
+    const newsUrl = generateNewsUrl(news.id);
+    const subject = `Notícia: ${news.title} - Girosa Beauty`;
+    const body = `Olá!
+
+Confira esta notícia do Girosa Beauty:
+
+${news.title}
+
+${news.description || 'Uma notícia incrível sobre beleza e cuidados capilares.'}
+
+Acesse: ${newsUrl}
+
+Atenciosamente,
+Girosa Beauty`;
+
+    const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoUrl;
+    
+    trackShare('email', news.id);
+}
+
+/**
+ * Copia link da notícia para área de transferência - CORRIGIDO
+ */
+async function copyNewsLink() {
+    if (!currentModalNews) return;
+    
+    const news = currentModalNews;
+    const newsUrl = generateNewsUrl(news.id);
+    
+    try {
+        await navigator.clipboard.writeText(newsUrl);
+        showCopyFeedback();
+        trackShare('copy_link', news.id);
+    } catch (err) {
+        // Fallback para navegadores antigos
+        const textArea = document.createElement('textarea');
+        textArea.value = newsUrl;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showCopyFeedback();
+        trackShare('copy_link', news.id);
+    }
+}
+
+/**
+ * Compartilhamento nativo (Web Share API) - CORRIGIDO COM LINK
+ */
+function shareNative() {
+    if (!currentModalNews) return;
+    
+    const news = currentModalNews;
+    const newsUrl = generateNewsUrl(news.id);
+    
+    if (navigator.share) {
+        navigator.share({
+            title: news.title,
+            text: news.description || 'Confira esta notícia da Girosa Beauty',
+            url: newsUrl,
+        })
+        .then(() => {
+            trackShare('native', news.id);
+            showNotification('Notícia compartilhada com sucesso!', 'success');
+        })
+        .catch((error) => {
+            console.log('Erro ao compartilhar:', error);
+            showNotification('Compartilhamento cancelado', 'info');
+        });
+    } else {
+        // Fallback: abrir modal de compartilhamento customizado
+        openShareModal();
+    }
+}
+
+/**
+ * Abre modal de compartilhamento customizado - ATUALIZADO COM MAIS OPÇÕES
+ */
+function openShareModal() {
+    // Remove modal anterior se existir
+    const existingModal = document.querySelector('.share-overlay');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    const overlay = document.createElement('div');
+    overlay.className = 'share-overlay active';
+    
+    overlay.innerHTML = `
+        <div class="share-modal">
+            <h3>
+                <i class="fas fa-share-alt"></i>
+                Compartilhar Notícia
+            </h3>
+            <p>Escolha como deseja compartilhar esta notícia:</p>
+            <div class="share-modal-buttons">
+                <button class="share-btn whatsapp-btn" onclick="shareOnWhatsApp()">
+                    <i class="fab fa-whatsapp"></i>
+                    WhatsApp
+                </button>
+                <button class="share-btn facebook-btn" onclick="shareOnFacebook()">
+                    <i class="fab fa-facebook"></i>
+                    Facebook
+                </button>
+                <button class="share-btn twitter-btn" onclick="shareOnTwitter()">
+                    <i class="fab fa-twitter"></i>
+                    Twitter
+                </button>
+                <button class="share-btn linkedin-btn" onclick="shareOnLinkedIn()">
+                    <i class="fab fa-linkedin"></i>
+                    LinkedIn
+                </button>
+                <button class="share-btn email-btn" onclick="shareOnEmail()">
+                    <i class="fas fa-envelope"></i>
+                    Email
+                </button>
+                <button class="share-btn copy-btn" onclick="copyNewsLink()">
+                    <i class="fas fa-link"></i>
+                    Copiar Link
+                </button>
+                <button class="share-btn" onclick="closeShareModal()" style="background: #6B7280;">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(overlay);
+    
+    // Fechar modal ao clicar fora
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) {
+            closeShareModal();
+        }
+    });
+    
+    // Fechar com ESC
+    const closeWithEsc = function(e) {
+        if (e.key === 'Escape') {
+            closeShareModal();
+            document.removeEventListener('keydown', closeWithEsc);
+        }
+    };
+    document.addEventListener('keydown', closeWithEsc);
+}
+
+// =============================================
+// SISTEMA DE CARREGAMENTO DE NOTÍCIA ESPECÍFICA
+// =============================================
+
+/**
+ * Carrega notícia específica baseada na URL
+ */
+function loadSpecificNewsFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const newsId = urlParams.get('news');
+    
+    if (newsId) {
+        // Encontrar a notícia pelo ID
+        const news = currentNewsList.find(n => n.id == newsId);
+        if (news) {
+            // Abrir modal automaticamente
+            setTimeout(() => {
+                openNewsModal(news);
+            }, 1000);
+            
+            // Rolar até as notícias
+            document.getElementById('news')?.scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+    }
+}
+
+/**
+ * Atualiza a função de inicialização para carregar notícia específica
+ */
+function initNoticiaPageWithSharing() {
+    console.log('Inicializando página de notícias com sistema de compartilhamento...');
+    
+    // Sobrescrever a função de renderização
+    window.renderNews = renderNewsWithSharing;
+    
+    // Carregar notícias
+    loadNewsFromDB().then(() => {
+        // Após carregar notícias, verificar se há uma específica para abrir
+        loadSpecificNewsFromUrl();
+    });
+    
+    // Configurar sistemas
+    setupNewsModal();
+    setupNewsFilters();
+    setupSharing();
+    
+    // Carregar reações salvas
+    setTimeout(() => {
+        loadSavedReactions();
+    }, 1000);
+    
+    console.log('Página de notícias com compartilhamento inicializada com sucesso');
+}

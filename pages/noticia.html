@@ -29,7 +29,7 @@
         </div>
     </section>
 
-    <!-- Modal para Notícias - CORRIGIDO -->
+    <!-- Modal para Notícias - ATUALIZADO COM COMPARTILHAMENTO -->
     <div id="news-modal" class="modal">
         <div class="news-modal-content">
             <div class="modal-header">
@@ -42,8 +42,39 @@
                 <!-- Mídia será inserida aqui -->
             </div>
 
-            <div class="modal-body">
-                <div class="modal-description" id="modal-news-description"></div>
+            <!-- NOVA SEÇÃO: Compartilhar Notícia - ATUALIZADA -->
+            <div class="share-section">
+                <h4>Compartilhar esta notícia</h4>
+                <div class="share-buttons">
+                    <button class="share-btn whatsapp-btn" onclick="shareOnWhatsApp()">
+                        <i class="fab fa-whatsapp"></i>
+                        WhatsApp
+                    </button>
+                    <button class="share-btn facebook-btn" onclick="shareOnFacebook()">
+                        <i class="fab fa-facebook"></i>
+                        Facebook
+                    </button>
+                    <button class="share-btn twitter-btn" onclick="shareOnTwitter()">
+                        <i class="fab fa-twitter"></i>
+                        Twitter
+                    </button>
+                    <button class="share-btn linkedin-btn" onclick="shareOnLinkedIn()">
+                        <i class="fab fa-linkedin"></i>
+                        LinkedIn
+                    </button>
+                    <button class="share-btn email-btn" onclick="shareOnEmail()">
+                        <i class="fas fa-envelope"></i>
+                        Email
+                    </button>
+                    <button class="share-btn copy-btn" onclick="copyNewsLink()">
+                        <i class="fas fa-link"></i>
+                        Copiar Link
+                    </button>
+                    <button class="share-btn share-native-btn" onclick="shareNative()">
+                        <i class="fas fa-share-alt"></i>
+                        Outros
+                    </button>
+                </div>
             </div>
 
             <div class="modal-footer">
@@ -61,7 +92,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- Footer -->
     <div id="footer-placeholder"></div>
