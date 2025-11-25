@@ -28,7 +28,7 @@ function loadBraids() {
         container.parentNode.insertBefore(promoBanner, container);
     }
     
-    braidsData.forEach(braid => {
+    braidsData.forEach((braid, index) => {
         const braidCard = document.createElement('div');
         braidCard.className = `braid-card ${braid.category}`;
         braidCard.setAttribute('data-category', braid.category);
@@ -54,6 +54,7 @@ function loadBraids() {
         `;
         
         braidCard.addEventListener('click', function() {
+            currentBraidIndex = index;
             openBraidModal(braid);
         });
         
@@ -88,7 +89,7 @@ function openBraidModal(braid) {
     console.log('Preço calculado:', precoCalculado);
     
     // Armazenar o preço original (já formatado)
-    currentBraidOriginalPrice = precoCalculado.comDesconto;
+    window.currentBraidOriginalPrice = precoCalculado.comDesconto;
     
     if (precoCalculado.temDesconto) {
         modalPrice.innerHTML = `
@@ -99,7 +100,7 @@ function openBraidModal(braid) {
     } else {
         // Usar o preço já formatado da função calcularPrecoComDesconto
         modalPrice.textContent = precoCalculado.comDesconto;
-        currentBraidOriginalPrice = precoCalculado.comDesconto;
+        window.currentBraidOriginalPrice = precoCalculado.comDesconto;
     }
     
     modal.style.display = 'block';
@@ -483,9 +484,9 @@ function loadColabBraidsCatalog() {
                 <h4>${braid.title}</h4>
                 <div class="braid-price-colab">
                     ${precoCalculado.temDesconto ? 
-                        `<span style="text-decoration: line-through; color: #999; font-size: 1rem; margin-right: 8px;">${braid.price}</span>
+                        `<span style="text-decoration: line-through; color: #999; font-size: 1rem; margin-right: 8px;">${formatCurrencyBR(braid.price)}</span>
                          <span>${precoCalculado.comDesconto}</span>` :
-                        braid.price
+                        formatCurrencyBR(braid.price)
                     }
                 </div>
             </div>
@@ -576,7 +577,7 @@ function showError(message) {
 }
 
 // =============================================
-// INICIALIZAÇÃO DA PÁGINA AGENDAR
+// INICIALIZAÇÃO DA PÁGINA AGENDAR - CORRIGIDA
 // =============================================
 
 /**
@@ -594,6 +595,9 @@ function initAgendarPage() {
             loadBraids();
             setupFilters();
             setupModal();
+            
+            // INICIALIZAR FORMULÁRIOS - CRÍTICO!
+            setupForms();
             
             // Esconder loading após carregar tudo
             setTimeout(hideLoading, 1000);
@@ -618,92 +622,8 @@ if (document.getElementById('braids-container') || document.getElementById('cola
 }
 
 // =============================================
-// FUNÇÕES AUXILIARES - AGENDAR
+// FUNÇÕES DE LOADING - ADICIONAR NO agendar.js
 // =============================================
-
-/**
- * Formata valor para moeda brasileira (R$)
- */
-function formatCurrencyBR(value) {
-    if (value === null || value === undefined) return "R$ 0,00";
-
-    return Number(value).toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL"
-    });
-}
-
-/**
- * Mostra notificação
- */
-function showNotification(message, type = 'info') {
-    // Remove notificação existente
-    const existingNotification = document.querySelector('.notification');
-    if (existingNotification) {
-        existingNotification.remove();
-    }
-    
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.innerHTML = `
-        <div class="notification-content">
-            <span class="notification-message">${message}</span>
-            <button class="notification-close">&times;</button>
-        </div>
-    `;
-    
-    // Estilos da notificação
-    notification.style.cssText = `
-        position: fixed;
-        top: 120px;
-        right: 20px;
-        background: ${type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : type === 'warning' ? '#f59e0b' : '#3b82f6'};
-        color: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        z-index: 10000;
-        max-width: 400px;
-        animation: slideInRight 0.3s ease;
-    `;
-    
-    notification.querySelector('.notification-content').style.cssText = `
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 15px;
-    `;
-    
-    notification.querySelector('.notification-close').style.cssText = `
-        background: none;
-        border: none;
-        color: white;
-        font-size: 18px;
-        cursor: pointer;
-        padding: 0;
-        width: 20px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Fechar notificação ao clicar no X
-    notification.querySelector('.notification-close').addEventListener('click', () => {
-        notification.style.animation = 'slideOutRight 0.3s ease';
-        setTimeout(() => notification.remove(), 300);
-    });
-    
-    // Auto-remover após 5 segundos
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.style.animation = 'slideOutRight 0.3s ease';
-            setTimeout(() => notification.remove(), 300);
-        }
-    }, 5000);
-}
 
 /**
  * Mostra a tela de carregamento
@@ -775,4 +695,178 @@ function generateSkeletonCards() {
         `;
         skeletonLoading.appendChild(skeletonCard);
     }
+}
+
+/**
+ * Formata valor para moeda brasileira (R$)
+ */
+function formatCurrencyBR(value) {
+    if (value === null || value === undefined) return "R$ 0,00";
+
+    return Number(value).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+    });
+}
+
+/**
+ * Mostra uma notificação para o usuário
+ */
+function showNotification(message, type = 'info') {
+    console.log(`📢 ${type.toUpperCase()}: ${message}`);
+    
+    // Remove notificação existente
+    const existingNotification = document.querySelector('.notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <span class="notification-message">${message}</span>
+            <button class="notification-close">&times;</button>
+        </div>
+    `;
+    
+    // Estilos da notificação
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: ${type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : type === 'warning' ? '#f59e0b' : '#3b82f6'};
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 10000;
+        max-width: 400px;
+        animation: slideInRight 0.3s ease;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Fechar notificação ao clicar no X
+    notification.querySelector('.notification-close').addEventListener('click', () => {
+        notification.remove();
+    });
+    
+    // Auto-remover após 5 segundos
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 5000);
+}
+
+// Adicionar estilos CSS para as animações se não existirem
+if (!document.querySelector('#notification-styles')) {
+    const style = document.createElement('style');
+    style.id = 'notification-styles';
+    style.textContent = `
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        
+        .skeleton-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        .skeleton-image {
+            width: 100%;
+            height: 200px;
+            background: #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .skeleton-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .skeleton-title {
+            height: 20px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            width: 80%;
+        }
+        
+        .skeleton-price {
+            height: 16px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            width: 60%;
+        }
+        
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+        
+        #loadingOverlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #8b5cf6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    `;
+    document.head.appendChild(style);
 }

@@ -183,3 +183,5 @@ document.addEventListener('DOMContentLoaded', function() {
     checkPageAccess();
     new TemplateManager();
 });
+
+
