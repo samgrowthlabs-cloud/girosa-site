@@ -29,7 +29,7 @@
         </div>
     </section>
 
-    <!-- Modal para Notícias - ATUALIZADO COM COMPARTILHAMENTO -->
+    <!-- Modal para Notícias -->
     <div id="news-modal" class="modal">
         <div class="news-modal-content">
             <div class="modal-header">
@@ -42,53 +42,65 @@
                 <!-- Mídia será inserida aqui -->
             </div>
 
-            <!-- NOVA SEÇÃO: Compartilhar Notícia - ATUALIZADA -->
-            <div class="share-section">
-                <h4>Compartilhar esta notícia</h4>
-                <div class="share-buttons">
-                    <button class="share-btn whatsapp-btn" onclick="shareOnWhatsApp()">
-                        <i class="fab fa-whatsapp"></i>
-                        WhatsApp
-                    </button>
-                    <button class="share-btn facebook-btn" onclick="shareOnFacebook()">
-                        <i class="fab fa-facebook"></i>
-                        Facebook
-                    </button>
-                    <button class="share-btn twitter-btn" onclick="shareOnTwitter()">
-                        <i class="fab fa-twitter"></i>
-                        Twitter
-                    </button>
-                    <button class="share-btn linkedin-btn" onclick="shareOnLinkedIn()">
-                        <i class="fab fa-linkedin"></i>
-                        LinkedIn
-                    </button>
-                    <button class="share-btn email-btn" onclick="shareOnEmail()">
-                        <i class="fas fa-envelope"></i>
-                        Email
-                    </button>
-                    <button class="share-btn copy-btn" onclick="copyNewsLink()">
-                        <i class="fas fa-link"></i>
-                        Copiar Link
-                    </button>
-                    <button class="share-btn share-native-btn" onclick="shareNative()">
+            <div class="modal-body">
+                <div class="modal-description" id="modal-news-description"></div>
+
+                <!-- BOTÃO FIXO DE COMPARTILHAMENTO (NO FINAL DO MODAL-BODY) -->
+                <div class="share-fixed-container">
+                    <button class="share-trigger-btn" onclick="openSharePopup()">
                         <i class="fas fa-share-alt"></i>
-                        Outros
+                        Compartilhar esta notícia
                     </button>
                 </div>
             </div>
 
+            <!-- RODAPÉ DO MODAL SEM REAÇÕES -->
             <div class="modal-footer">
-                <div class="modal-reactions">
-                    <button class="modal-reaction-btn like" onclick="handleModalReaction(this, 'like')">
-                        👍 Legal
-                    </button>
-                    <button class="modal-reaction-btn neutral" onclick="handleModalReaction(this, 'neutral')">
-                        😊 Gostei
-                    </button>
-                    <button class="modal-reaction-btn dislike" onclick="handleModalReaction(this, 'dislike')">
-                        ❌ Tanto Faz
-                    </button>
-                </div>
+                <!-- Espaço vazio ou pode adicionar outras informações se necessário -->
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP DE COMPARTILHAMENTO -->
+    <div class="share-popup-overlay" id="share-popup">
+        <div class="share-popup">
+            <div class="share-popup-header">
+                <h3>📤 Compartilhar Notícia</h3>
+                <p>Escolha como deseja compartilhar</p>
+            </div>
+            
+            <div class="share-popup-grid">
+                <button class="share-popup-btn whatsapp" onclick="shareOnWhatsApp()">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>WhatsApp</span>
+                </button>
+                <button class="share-popup-btn facebook" onclick="shareOnFacebook()">
+                    <i class="fab fa-facebook"></i>
+                    <span>Facebook</span>
+                </button>
+                <button class="share-popup-btn twitter" onclick="shareOnTwitter()">
+                    <i class="fab fa-twitter"></i>
+                    <span>Twitter</span>
+                </button>
+                <button class="share-popup-btn linkedin" onclick="shareOnLinkedIn()">
+                    <i class="fab fa-linkedin"></i>
+                    <span>LinkedIn</span>
+                </button>
+                <button class="share-popup-btn email" onclick="shareOnEmail()">
+                    <i class="fas fa-envelope"></i>
+                    <span>E-mail</span>
+                </button>
+                <button class="share-popup-btn copy" onclick="copyNewsLink()">
+                    <i class="fas fa-link"></i>
+                    <span>Copiar Link</span>
+                </button>
+            </div>
+            
+            <div class="share-popup-actions">
+                <button class="share-popup-close" onclick="closeSharePopup()">
+                    <i class="fas fa-times"></i>
+                    Fechar
+                </button>
             </div>
         </div>
     </div>

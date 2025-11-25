@@ -45,6 +45,9 @@ async function loadNewsFromDB() {
         // Armazenar e renderizar
         currentNewsList = data.news || [];
         renderNews(currentNewsList);
+        
+        // VERIFICAR PARÂMETROS DA URL APÓS CARREGAR NOTÍCIAS
+        checkUrlParams();
 
     } catch (err) {
         console.error("Erro ao carregar notícias:", err);
@@ -115,6 +118,7 @@ function createNewsCard(news) {
     const card = document.createElement("div");
     card.className = "news-card";
     card.setAttribute('data-news-id', news.id);
+    card.id = `news-card-${news.id}`;
 
     // Determinar tipo de mídia
     const hasVideo = news.video && isValidUrl(news.video);
@@ -141,7 +145,7 @@ function createNewsCard(news) {
             </div>
             
             ${hasVideo ? `
-                <video muted loop playsinline, controls controlsList="nodownload" oncontextmenu="return false;">
+                <video muted loop playsinline controls controlsList="nodownload" oncontextmenu="return false;">
                     <source src="${news.video}" type="video/mp4">
                 </video>
                 <div class="video-overlay">
@@ -167,26 +171,17 @@ function createNewsCard(news) {
             <h3>${escapeHtml(news.title)}</h3>
             <p>${escapeHtml(news.description || '')}</p>
 
+            <!-- RODAPÉ SEM BOTÕES DE REAÇÃO -->
             <div class="news-footer">
-                <div class="reactions">
-                    <button class="reaction-btn like" onclick="handleReaction(this, 'like', '${news.id}')">
-                        👍 Legal
-                    </button>
-                    <button class="reaction-btn neutral" onclick="handleReaction(this, 'neutral', '${news.id}')">
-                        😊 Gostei
-                    </button>
-                    <button class="reaction-btn dislike" onclick="handleReaction(this, 'dislike', '${news.id}')">
-                        ❌ Tanto Faz
-                    </button>
-                </div>
+                <!-- Espaço vazio ou pode adicionar outras informações se necessário -->
             </div>
         </div>
     `;
 
     // Tornar card clicável
     card.addEventListener('click', (e) => {
-        // Não abrir modal se clicar nos botões de reação ou nos badges
-        if (!e.target.closest('.reaction-btn') && !e.target.closest('.news-badges')) {
+        // Não abrir modal se clicar nos badges
+        if (!e.target.closest('.news-badges')) {
             console.log('Abrindo modal para:', news.title);
             openNewsModal(news);
         }
@@ -374,15 +369,15 @@ function setupNewsModal() {
 }
 
 // =============================================
-// SISTEMA DE COMPARTILHAMENTO
+// SISTEMA DE COMPARTILHAMENTO COM URL DIRETA
 // =============================================
 
 /**
- * Gera URL única para a notícia
+ * Gera URL única para a notícia que abre direto no modal
  */
 function generateNewsUrl(newsId) {
     const baseUrl = window.location.origin + window.location.pathname;
-    return `${baseUrl}?news=${newsId}&utm_source=share&utm_medium=social&utm_campaign=news_sharing`;
+    return `${baseUrl}?news=${newsId}&modal=true`;
 }
 
 /**
@@ -546,74 +541,81 @@ function shareNative() {
 }
 
 // =============================================
-// FUNÇÕES AUXILIARES
+// FUNÇÕES PARA O POPUP DE COMPARTILHAMENTO
 // =============================================
 
 /**
- * Manipula as reações às notícias
+ * Abre o popup de compartilhamento
  */
-function handleReaction(button, type, newsId) {
-    // Remover classe active de todos os botões do mesmo grupo
-    const reactionButtons = button.parentElement.querySelectorAll('.reaction-btn');
-    reactionButtons.forEach(btn => btn.classList.remove('active'));
-    
-    // Adicionar classe active ao botão clicado
-    button.classList.add('active');
-    
-    // Salvar reação no localStorage
-    const reactions = JSON.parse(localStorage.getItem('news-reactions') || '{}');
-    reactions[newsId] = type;
-    localStorage.setItem('news-reactions', JSON.stringify(reactions));
-    
-    // Mostrar feedback
-    showNotification(`Reação "${getReactionLabel(type)}" registrada!`, 'success');
-    
-    // Enviar reação para o servidor
-    sendReactionToServer(newsId, type);
+function openSharePopup() {
+    const popup = document.getElementById('share-popup');
+    if (popup) {
+        popup.classList.add('active');
+    }
 }
 
 /**
- * Manipula reações no modal
+ * Fecha o popup de compartilhamento
  */
-function handleModalReaction(button, type) {
-    if (!currentModalNews) return;
+function closeSharePopup() {
+    const popup = document.getElementById('share-popup');
+    if (popup) {
+        popup.classList.remove('active');
+    }
+}
+
+// =============================================
+// SISTEMA DE URL PARA ABRIR NOTÍCIA DIRETAMENTE
+// =============================================
+
+/**
+ * Verifica se há parâmetros na URL para abrir notícia diretamente
+ */
+function checkUrlParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const newsId = urlParams.get('news');
+    const shouldOpenModal = urlParams.get('modal') === 'true';
     
-    handleReaction(button, type, currentModalNews.id);
-}
-
-/**
- * Envia reação para o servidor
- */
-function sendReactionToServer(newsId, reaction) {
-    console.log(`Enviando reação: Notícia ${newsId} - ${reaction}`);
-    // Em produção, substituir por chamada real à API
-}
-
-/**
- * Retorna o label da reação
- */
-function getReactionLabel(type) {
-    const labels = {
-        'like': 'Legal',
-        'neutral': 'Gostei', 
-        'dislike': 'Tanto Faz'
-    };
-    return labels[type] || type;
-}
-
-/**
- * Carrega reações salvas do localStorage
- */
-function loadSavedReactions() {
-    const reactions = JSON.parse(localStorage.getItem('news-reactions') || '{}');
-    
-    Object.keys(reactions).forEach(newsId => {
-        const button = document.querySelector(`[onclick*="handleReaction(this, '${reactions[newsId]}', '${newsId}')"]`);
-        if (button) {
-            button.classList.add('active');
+    if (newsId && shouldOpenModal) {
+        console.log('Abrindo notícia diretamente da URL:', newsId);
+        
+        // Buscar a notícia pelo ID
+        const news = currentNewsList.find(n => n.id == newsId);
+        if (news) {
+            // Pequeno delay para garantir que tudo está carregado
+            setTimeout(() => {
+                openNewsModal(news);
+                // Limpar a URL para não abrir novamente ao recarregar
+                cleanUrl();
+            }, 500);
+        } else {
+            console.log('Notícia não encontrada, aguardando carregamento...');
+            // Se as notícias ainda não carregaram, tenta novamente em 2 segundos
+            setTimeout(() => {
+                const news = currentNewsList.find(n => n.id == newsId);
+                if (news) {
+                    openNewsModal(news);
+                    cleanUrl();
+                } else {
+                    console.error('Notícia não encontrada após tentativas');
+                    showNotification('Notícia não encontrada', 'error');
+                }
+            }, 2000);
         }
-    });
+    }
 }
+
+/**
+ * Limpa os parâmetros da URL sem recarregar a página
+ */
+function cleanUrl() {
+    const cleanUrl = window.location.origin + window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
+}
+
+// =============================================
+// FUNÇÕES AUXILIARES
+// =============================================
 
 /**
  * Track compartilhamentos
@@ -812,11 +814,6 @@ function initNoticiaPage() {
     // Carregar notícias
     loadNewsFromDB();
     
-    // Carregar reações salvas
-    setTimeout(() => {
-        loadSavedReactions();
-    }, 1000);
-    
     console.log('Página de notícias inicializada com sucesso');
 }
 
@@ -824,6 +821,21 @@ function initNoticiaPage() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM carregado, inicializando página de notícias...');
     initNoticiaPage();
+});
+
+// Configurar eventos do popup de compartilhamento
+document.addEventListener('click', function(e) {
+    const popup = document.getElementById('share-popup');
+    if (popup && popup.classList.contains('active') && e.target === popup) {
+        closeSharePopup();
+    }
+});
+
+// Fechar popup com ESC
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeSharePopup();
+    }
 });
 
 // Adicionar animação de fadeOut

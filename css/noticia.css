@@ -77,7 +77,7 @@
 }
 
 .priority-badge {
-    background: linear-gradient(45deg, #ff6b00, #ff8c00);
+    background: linear-gradient(45deg, #404040, #606060);
     color: white;
     padding: 6px 12px;
     border-radius: 20px;
@@ -163,77 +163,13 @@
     overflow: hidden;
 }
 
-/* Rodapé da Notícia */
+/* Rodapé da Notícia - SEM REAÇÕES */
 .news-footer {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     padding-top: 20px;
     border-top: 1px solid #eaeaea;
-}
-
-/* Sistema de Reações */
-.reactions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.reaction-btn {
-    background: none;
-    border: 2px solid #eaeaea;
-    border-radius: 25px;
-    padding: 8px 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-    min-width: 80px;
-    justify-content: center;
-}
-
-.reaction-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-}
-
-.reaction-btn.like:hover {
-    border-color: #28a745;
-    background: #f8fff9;
-}
-
-.reaction-btn.neutral:hover {
-    border-color: #007bff;
-    background: #f0f8ff;
-}
-
-.reaction-btn.dislike:hover {
-    border-color: #dc3545;
-    background: #fff5f5;
-}
-
-.reaction-btn.active {
-    transform: scale(1.05);
-}
-
-.reaction-btn.like.active {
-    border-color: #28a745;
-    background: #28a745;
-    color: white;
-}
-
-.reaction-btn.neutral.active {
-    border-color: #007bff;
-    background: #007bff;
-    color: white;
-}
-
-.reaction-btn.dislike.active {
-    border-color: #dc3545;
-    background: #dc3545;
-    color: white;
 }
 
 /* =============================================
@@ -287,7 +223,7 @@
 /* Header do Modal */
 .modal-header {
     padding: 30px 30px 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #222 0%, #444 100%);
     color: white;
     position: relative;
 }
@@ -382,121 +318,173 @@
 }
 
 /* =============================================
-   SEÇÃO DE COMPARTILHAMENTO NO MODAL
+   SISTEMA DE COMPARTILHAMENTO ATUALIZADO
    ============================================= */
 
-.share-section {
-    margin-top: 30px;
-    padding-top: 25px;
-    border-top: 2px solid #f0f0f0;
-}
-
-.share-section h4 {
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 1.2rem;
+/* Botão principal de compartilhamento */
+.share-button-container {
     display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.share-section h4::before {
-    content: "📤";
-    font-size: 1.3em;
-}
-
-.share-buttons {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
-    margin-top: 15px;
-}
-
-.share-btn {
-    display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 12px 15px;
+    margin: 20px 0;
+}
+
+.share-trigger-btn {
+    background: linear-gradient(135deg, #333, #555);
+    color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 0.9rem;
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    text-decoration: none;
-    color: white;
-    min-height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.share-btn:hover {
+.share-trigger-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #444, #666);
 }
 
-.share-btn:active {
-    transform: translateY(0);
+/* Popup de compartilhamento (inicialmente escondido) */
+.share-popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10001;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-/* Botões específicos de compartilhamento */
-.whatsapp-btn {
-    background: linear-gradient(135deg, #25D366, #128C7E);
+.share-popup-overlay.active {
+    display: flex;
+    animation: fadeIn 0.3s ease;
 }
 
-.whatsapp-btn:hover {
-    background: linear-gradient(135deg, #128C7E, #25D366);
+.share-popup {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 500px;
+    width: 95%;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: popupSlideUp 0.3s ease;
+    position: relative;
 }
 
-.facebook-btn {
-    background: linear-gradient(135deg, #1877F2, #0D5FD6);
+@keyframes popupSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
-.facebook-btn:hover {
-    background: linear-gradient(135deg, #0D5FD6, #1877F2);
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-.twitter-btn {
-    background: linear-gradient(135deg, #1DA1F2, #0d8bd9);
+.share-popup-header {
+    margin-bottom: 25px;
 }
 
-.twitter-btn:hover {
-    background: linear-gradient(135deg, #0d8bd9, #1DA1F2);
+.share-popup-header h3 {
+    color: #333;
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
-.linkedin-btn {
-    background: linear-gradient(135deg, #0077B5, #005885);
+.share-popup-header p {
+    color: #666;
+    font-size: 1rem;
 }
 
-.linkedin-btn:hover {
-    background: linear-gradient(135deg, #005885, #0077B5);
+.share-popup-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
 }
 
-.email-btn {
-    background: linear-gradient(135deg, #EA4335, #d33426);
+.share-popup-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 10px;
+    border: 2px solid #f0f0f0;
+    border-radius: 15px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: #333;
 }
 
-.email-btn:hover {
-    background: linear-gradient(135deg, #d33426, #EA4335);
+.share-popup-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    border-color: #ccc;
+    background: #f8f8f8;
 }
 
-.copy-btn {
-    background: linear-gradient(135deg, #6B7280, #4B5563);
+.share-popup-btn i {
+    font-size: 2rem;
+    margin-bottom: 5px;
+    color: #333;
 }
 
-.copy-btn:hover {
-    background: linear-gradient(135deg, #4B5563, #6B7280);
+.share-popup-btn span {
+    font-size: 0.85rem;
+    font-weight: 600;
 }
 
-.share-native-btn {
-    background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+.share-popup-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
 }
 
-.share-native-btn:hover {
-    background: linear-gradient(135deg, #7C3AED, #8B5CF6);
+.share-popup-close {
+    background: #555;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.share-popup-close:hover {
+    background: #333;
+    transform: translateY(-2px);
 }
 
 /* =============================================
-   RODAPÉ DO MODAL
+   RODAPÉ DO MODAL - SEM REAÇÕES
    ============================================= */
 
 .modal-footer {
@@ -506,71 +494,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.modal-reactions {
-    display: flex;
-    gap: 15px;
-}
-
-.modal-reaction-btn {
-    background: white;
-    border: 2px solid #e2e8f0;
-    border-radius: 25px;
-    padding: 12px 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 1.1rem;
-    font-weight: 500;
-    min-width: 120px;
-    justify-content: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.modal-reaction-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-}
-
-.modal-reaction-btn.like:hover {
-    border-color: #22c55e;
-    background: #f0fdf4;
-}
-
-.modal-reaction-btn.neutral:hover {
-    border-color: #3b82f6;
-    background: #f0f9ff;
-}
-
-.modal-reaction-btn.dislike:hover {
-    border-color: #ef4444;
-    background: #fef2f2;
-}
-
-.modal-reaction-btn.active {
-    transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-}
-
-.modal-reaction-btn.like.active {
-    border-color: #22c55e;
-    background: #22c55e;
-    color: white;
-}
-
-.modal-reaction-btn.neutral.active {
-    border-color: #3b82f6;
-    background: #3b82f6;
-    color: white;
-}
-
-.modal-reaction-btn.dislike.active {
-    border-color: #ef4444;
-    background: #ef4444;
-    color: white;
 }
 
 /* =============================================
@@ -659,168 +582,6 @@
     transform: translateY(-2px);
 }
 
-/* =============================================
-   RESPONSIVIDADE
-   ============================================= */
-
-@media (max-width: 1200px) {
-    .news-modal-content {
-        max-width: 95%;
-    }
-}
-
-@media (max-width: 768px) {
-    #news-modal.open {
-        padding: 10px;
-        align-items: flex-start;
-    }
-    
-    .news-modal-content {
-        width: 100%;
-        max-height: 95vh;
-        border-radius: 10px;
-        margin-top: 20px;
-    }
-    
-    .modal-header {
-        padding: 20px 20px 15px;
-    }
-    
-    .modal-header h2 {
-        font-size: 1.6rem;
-        padding-right: 40px;
-    }
-    
-    .close-modal {
-        top: 18px;
-        right: 18px;
-        width: 40px;
-        height: 40px;
-        font-size: 24px;
-    }
-    
-    .modal-media {
-        max-height: 50vh;
-        min-height: 250px;
-    }
-    
-    .modal-media img,
-    .modal-media video {
-        max-height: 50vh;
-    }
-    
-    .modal-body {
-        padding: 20px;
-    }
-    
-    .share-buttons {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
-    
-    .share-btn {
-        padding: 10px 12px;
-        font-size: 0.85rem;
-    }
-    
-    .modal-footer {
-        padding: 15px 20px;
-    }
-    
-    .modal-reactions {
-        gap: 10px;
-        width: 100%;
-        justify-content: space-between;
-    }
-    
-    .modal-reaction-btn {
-        flex: 1;
-        padding: 10px 15px;
-        font-size: 1rem;
-        min-width: auto;
-    }
-    
-    .news-grid {
-        grid-template-columns: 1fr;
-        padding: 20px;
-        gap: 20px;
-    }
-    
-    .news-content {
-        padding: 20px;
-    }
-    
-    .news-footer {
-        flex-direction: column;
-        gap: 15px;
-        align-items: flex-start;
-    }
-    
-    .reactions {
-        width: 100%;
-        justify-content: space-between;
-    }
-    
-    .reaction-btn {
-        flex: 1;
-        min-width: auto;
-    }
-    
-    .news-badges {
-        top: 10px;
-        right: 10px;
-        gap: 5px;
-    }
-    
-    .media-type-badge,
-    .priority-badge {
-        font-size: 0.7rem;
-        padding: 4px 8px;
-    }
-}
-
-@media (max-width: 480px) {
-    .modal-header h2 {
-        font-size: 1.4rem;
-    }
-    
-    .modal-media {
-        max-height: 40vh;
-        min-height: 200px;
-    }
-    
-    .modal-media img,
-    .modal-media video {
-        max-height: 40vh;
-    }
-    
-    .share-buttons {
-        grid-template-columns: 1fr;
-    }
-    
-    .share-section h4 {
-        font-size: 1.1rem;
-        justify-content: center;
-    }
-    
-    .modal-reaction-btn {
-        padding: 8px 12px;
-        font-size: 0.9rem;
-    }
-    
-    .reaction-btn {
-        padding: 6px 12px;
-        font-size: 0.85rem;
-        min-width: 70px;
-    }
-    
-    .media-type-badge,
-    .priority-badge {
-        font-size: 0.7rem;
-        padding: 4px 8px;
-    }
-}
-
 /* Placeholder para sem mídia */
 .no-media-placeholder {
     background: #f8f9fa;
@@ -838,4 +599,432 @@
 .placeholder-icon {
     font-size: 3rem;
     margin-bottom: 10px;
+}
+
+/* =============================================
+   RESPONSIVIDADE - MOBILE FIRST
+   ============================================= */
+
+/* Tablets */
+@media (max-width: 1024px) {
+    .news-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+        padding: 30px 4%;
+    }
+    
+    .news-modal-content {
+        max-width: 90%;
+    }
+}
+
+/* Tablets Pequenos e Mobile Grande */
+@media (max-width: 768px) {
+    .news-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .news-card {
+        border-radius: 10px;
+    }
+    
+    .news-media {
+        height: 200px;
+    }
+    
+    .news-content {
+        padding: 20px;
+    }
+    
+    .news-content h3 {
+        font-size: 1.2rem;
+    }
+    
+    .news-footer {
+        justify-content: center;
+    }
+    
+    /* Modal Mobile */
+    #news-modal.open {
+        padding: 10px;
+        align-items: flex-start;
+    }
+    
+    .news-modal-content {
+        width: 100%;
+        max-height: 95vh;
+        border-radius: 10px;
+        margin-top: 10px;
+    }
+    
+    .modal-header {
+        padding: 20px 20px 15px;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.4rem;
+        padding-right: 40px;
+    }
+    
+    .close-modal {
+        top: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+    }
+    
+    .modal-media {
+        max-height: 40vh;
+        min-height: 200px;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .modal-description {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+    
+    .share-trigger-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .share-popup {
+        padding: 25px 20px;
+        border-radius: 15px;
+    }
+    
+    .share-popup-header h3 {
+        font-size: 1.3rem;
+    }
+    
+    .share-popup-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .share-popup-btn {
+        padding: 15px 8px;
+    }
+    
+    .share-popup-btn i {
+        font-size: 1.8rem;
+    }
+    
+    .share-popup-btn span {
+        font-size: 0.8rem;
+    }
+    
+    .modal-footer {
+        padding: 15px 20px;
+    }
+}
+
+/* Mobile Pequeno */
+@media (max-width: 480px) {
+    .news-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .news-media {
+        height: 180px;
+    }
+    
+    .news-content {
+        padding: 15px;
+    }
+    
+    .news-content h3 {
+        font-size: 1.1rem;
+    }
+    
+    .news-content p {
+        font-size: 0.9rem;
+    }
+    
+    .news-badges {
+        top: 10px;
+        right: 10px;
+        gap: 5px;
+    }
+    
+    .media-type-badge,
+    .priority-badge {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+    
+    /* Modal Mobile Pequeno */
+    .modal-header h2 {
+        font-size: 1.2rem;
+    }
+    
+    .modal-date {
+        font-size: 0.9rem;
+    }
+    
+    .modal-media {
+        max-height: 35vh;
+        min-height: 150px;
+    }
+    
+    .share-popup {
+        padding: 20px 15px;
+    }
+    
+    .share-popup-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .share-popup-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .share-popup-btn {
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 12px 15px;
+        text-align: left;
+    }
+    
+    .share-popup-btn i {
+        margin-bottom: 0;
+        margin-right: 10px;
+        font-size: 1.4rem;
+    }
+    
+    .share-popup-close {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .copy-feedback {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Mobile Muito Pequeno */
+@media (max-width: 360px) {
+    .news-grid {
+        padding: 10px;
+    }
+    
+    .news-content {
+        padding: 12px;
+    }
+    
+    .modal-header {
+        padding: 15px 15px 10px;
+    }
+    
+    .modal-body {
+        padding: 15px;
+    }
+    
+    .modal-footer {
+        padding: 12px 15px;
+    }
+    
+    .share-popup {
+        padding: 15px 12px;
+    }
+}
+
+/* Orientação Landscape em Mobile */
+@media (max-height: 600px) and (orientation: landscape) {
+    #news-modal.open {
+        align-items: flex-start;
+        padding-top: 10px;
+    }
+    
+    .news-modal-content {
+        max-height: 95vh;
+        margin-top: 10px;
+    }
+    
+    .modal-media {
+        max-height: 40vh;
+    }
+    
+    .share-popup-overlay {
+        align-items: flex-start;
+        padding-top: 20px;
+    }
+    
+    .share-popup {
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .news-card {
+        background: #1f2937;
+        border-color: #374151;
+        color: #f9fafb;
+    }
+    
+    .news-content h3 {
+        color: #f9fafb;
+    }
+    
+    .news-content p {
+        color: #d1d5db;
+    }
+    
+    .news-date {
+        color: #9ca3af;
+    }
+    
+    .no-media-placeholder {
+        background: #374151;
+        color: #9ca3af;
+    }
+}
+
+
+/* =============================================
+   BOTÃO FIXO DE COMPARTILHAMENTO
+   ============================================= */
+
+/* Container fixo para o botão de compartilhamento */
+.share-fixed-container {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(transparent, white 30%);
+    padding: 20px 30px 30px;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+/* Botão principal de compartilhamento FIXO */
+.share-trigger-btn {
+    background: linear-gradient(135deg, #333, #555);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    position: relative;
+    z-index: 101;
+    min-width: 200px;
+    justify-content: center;
+}
+
+.share-trigger-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.35);
+    background: linear-gradient(135deg, #444, #666);
+}
+
+/* Efeito de brilho no botão */
+.share-trigger-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 25px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.share-trigger-btn:hover::before {
+    opacity: 1;
+}
+
+/* Ajuste no modal-body para espaço do botão fixo */
+.modal-body {
+    padding: 30px 30px 80px; /* Mais padding em baixo para o botão fixo */
+    background: white;
+    position: relative;
+}
+
+/* =============================================
+   RESPONSIVIDADE PARA BOTÃO FIXO
+   ============================================= */
+
+@media (max-width: 768px) {
+    .share-fixed-container {
+        padding: 15px 20px 20px;
+        background: linear-gradient(transparent, white 40%);
+    }
+    
+    .share-trigger-btn {
+        padding: 12px 25px;
+        font-size: 1rem;
+        min-width: 180px;
+    }
+    
+    .modal-body {
+        padding: 20px 20px 70px;
+    }
+}
+
+@media (max-width: 480px) {
+    .share-fixed-container {
+        padding: 12px 15px 15px;
+        background: linear-gradient(transparent, white 50%);
+    }
+    
+    .share-trigger-btn {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+        min-width: 160px;
+        border-radius: 20px;
+    }
+    
+    .modal-body {
+        padding: 15px 15px 60px;
+    }
+}
+
+/* Para telas muito pequenas */
+@media (max-width: 360px) {
+    .share-trigger-btn {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        min-width: 140px;
+    }
+    
+    .share-trigger-btn i {
+        font-size: 0.9rem;
+    }
+}
+
+/* Para landscape em mobile */
+@media (max-height: 600px) and (orientation: landscape) {
+    .share-fixed-container {
+        padding: 10px 15px 15px;
+        background: linear-gradient(transparent, white 60%);
+    }
+    
+    .share-trigger-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
 }
