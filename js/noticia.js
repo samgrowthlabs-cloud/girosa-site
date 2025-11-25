@@ -1,5 +1,21 @@
 // =============================================
-// JAVASCRIPT ESPECÍFICO DA PÁGINA NOTICIA
+// VARIÁVEIS GLOBAIS - NOTICIA
+// =============================================
+
+/**
+ * Dados das notícias carregadas do banco de dados
+ * @type {Array}
+ */
+let currentNewsList = [];
+
+/**
+ * Notícia atualmente aberta no modal
+ * @type {Object|null}
+ */
+let currentModalNews = null;
+
+// =============================================
+// FUNÇÕES PRINCIPAIS - NOTICIA
 // =============================================
 
 /**
@@ -41,7 +57,12 @@ async function loadNewsFromDB() {
  */
 function renderNews(newsList) {
     const container = document.getElementById("news-container");
-    if (!container) return;
+    if (!container) {
+        console.error('Container de notícias não encontrado!');
+        return;
+    }
+
+    console.log('Renderizando notícias:', newsList);
 
     // Mostrar loading
     container.innerHTML = `
@@ -53,6 +74,7 @@ function renderNews(newsList) {
 
     setTimeout(() => {
         if (!newsList || newsList.length === 0) {
+            console.log('Nenhuma notícia para renderizar');
             container.innerHTML = `
                 <div class="empty-state">
                     <div class="empty-icon">📝</div>
@@ -73,6 +95,8 @@ function renderNews(newsList) {
             return new Date(b.created_at) - new Date(a.created_at);
         });
 
+        console.log('Notícias ordenadas:', sortedNews);
+
         sortedNews.forEach(news => {
             const card = createNewsCard(news);
             container.appendChild(card);
@@ -85,7 +109,7 @@ function renderNews(newsList) {
 }
 
 /**
- * Cria um card de notícia - COM BADGES CORRIGIDOS
+ * Cria um card de notícia
  */
 function createNewsCard(news) {
     const card = document.createElement("div");
@@ -97,9 +121,11 @@ function createNewsCard(news) {
     const hasImage = news.image && isValidUrl(news.image);
     const mediaType = hasVideo ? 'video' : hasImage ? 'image' : 'none';
 
+    console.log('Criando card para:', news.title, 'Tipo mídia:', mediaType);
+
     card.innerHTML = `
         <div class="news-media" data-news-id="${news.id}">
-            <!-- Badges no canto superior direito - CORRIGIDO -->
+            <!-- Badges no canto superior direito -->
             <div class="news-badges">
                 ${mediaType !== 'none' ? `
                     <div class="media-type-badge">
@@ -115,7 +141,7 @@ function createNewsCard(news) {
             </div>
             
             ${hasVideo ? `
-                <video muted loop playsinline>
+                <video muted loop playsinline, controls controlsList="nodownload" oncontextmenu="return false;">
                     <source src="${news.video}" type="video/mp4">
                 </video>
                 <div class="video-overlay">
@@ -124,9 +150,9 @@ function createNewsCard(news) {
             ` : hasImage ? `
                 <img src="${news.image}" alt="${escapeHtml(news.title)}" loading="lazy">
             ` : `
-                <div style="background: #f8f9fa; height: 100%; display: flex; align-items: center; justify-content: center; color: #666;">
-                    <div style="text-align: center;">
-                        <div style="font-size: 3rem; margin-bottom: 10px;">📰</div>
+                <div class="no-media-placeholder">
+                    <div class="placeholder-content">
+                        <div class="placeholder-icon">📰</div>
                         <div>Sem mídia</div>
                     </div>
                 </div>
@@ -143,13 +169,13 @@ function createNewsCard(news) {
 
             <div class="news-footer">
                 <div class="reactions">
-                    <button class="reaction-btn like" onclick="handleReaction(this, 'like', ${news.id})">
+                    <button class="reaction-btn like" onclick="handleReaction(this, 'like', '${news.id}')">
                         👍 Legal
                     </button>
-                    <button class="reaction-btn neutral" onclick="handleReaction(this, 'neutral', ${news.id})">
+                    <button class="reaction-btn neutral" onclick="handleReaction(this, 'neutral', '${news.id}')">
                         😊 Gostei
                     </button>
-                    <button class="reaction-btn dislike" onclick="handleReaction(this, 'dislike', ${news.id})">
+                    <button class="reaction-btn dislike" onclick="handleReaction(this, 'dislike', '${news.id}')">
                         ❌ Tanto Faz
                     </button>
                 </div>
@@ -161,6 +187,7 @@ function createNewsCard(news) {
     card.addEventListener('click', (e) => {
         // Não abrir modal se clicar nos botões de reação ou nos badges
         if (!e.target.closest('.reaction-btn') && !e.target.closest('.news-badges')) {
+            console.log('Abrindo modal para:', news.title);
             openNewsModal(news);
         }
     });
@@ -169,7 +196,7 @@ function createNewsCard(news) {
 }
 
 /**
- * Configura eventos para vídeos - CORRIGIDO
+ * Configura eventos para vídeos
  */
 function setupVideoEvents() {
     // Event delegation para áreas de mídia
@@ -183,6 +210,7 @@ function setupVideoEvents() {
             const news = currentNewsList.find(n => n.id == newsId);
             
             if (news) {
+                console.log('Abrindo modal via clique na mídia:', news.title);
                 openNewsModal(news);
             }
         }
@@ -200,14 +228,19 @@ function setupVideoEvents() {
             const news = currentNewsList.find(n => n.id == newsId);
             
             if (news) {
+                console.log('Abrindo modal via overlay de vídeo:', news.title);
                 openNewsModal(news);
             }
         });
     });
 }
 
+// =============================================
+// MODAL DE NOTÍCIAS - CORRIGIDO
+// =============================================
+
 /**
- * Abre o modal da notícia - CORRIGIDO PARA VÍDEOS
+ * Abre o modal da notícia
  */
 function openNewsModal(news) {
     const modal = document.getElementById('news-modal');
@@ -217,34 +250,36 @@ function openNewsModal(news) {
     }
 
     currentModalNews = news;
+    console.log('Abrindo modal para:', news.title);
 
     // Preencher dados do modal
-    const modalTitle = modal.querySelector('.modal-header h2');
-    const modalDate = modal.querySelector('.modal-date');
-    const modalMedia = modal.querySelector('.modal-media');
-    const modalDescription = modal.querySelector('.modal-description');
+    const modalTitle = document.getElementById('modal-news-title');
+    const modalDate = document.getElementById('modal-news-date');
+    const modalMedia = document.getElementById('modal-news-media');
+    const modalDescription = document.getElementById('modal-news-description');
 
     if (modalTitle) modalTitle.textContent = news.title;
     if (modalDate) modalDate.textContent = formatNewsDate(news.created_at);
     if (modalDescription) modalDescription.textContent = news.description || '';
 
-    // Configurar mídia - CORRIGIDO PARA CENTRALIZAR
+    // Configurar mídia
     const hasVideo = news.video && isValidUrl(news.video);
     const hasImage = news.image && isValidUrl(news.image);
 
+    let mediaHTML = '';
     if (hasVideo) {
-        modalMedia.innerHTML = `
-            <video controls autoplay playsinline style="width: 100%; max-height: 60vh; object-fit: contain;">
+        mediaHTML = `
+            <video controls autoplay playsinline style="width: 100%; max-height: 50vh; object-fit: contain;">
                 <source src="${news.video}" type="video/mp4">
                 Seu navegador não suporta o vídeo.
             </video>
         `;
     } else if (hasImage) {
-        modalMedia.innerHTML = `
-            <img src="${news.image}" alt="${news.title}" style="max-width: 100%; max-height: 60vh; object-fit: contain;">
+        mediaHTML = `
+            <img src="${news.image}" alt="${news.title}" style="max-width: 100%; max-height: 50vh; object-fit: contain;">
         `;
     } else {
-        modalMedia.innerHTML = `
+        mediaHTML = `
             <div style="background: #f8f9fa; height: 200px; display: flex; align-items: center; justify-content: center; color: #666;">
                 <div style="text-align: center;">
                     <div style="font-size: 3rem; margin-bottom: 10px;">📰</div>
@@ -254,11 +289,16 @@ function openNewsModal(news) {
         `;
     }
 
+    if (modalMedia) {
+        modalMedia.innerHTML = mediaHTML;
+    }
+
     // Mostrar modal
     modal.classList.add('open');
+    modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
 
-    console.log('Modal aberto com sucesso para:', news.title);
+    console.log('Modal aberto com sucesso');
 }
 
 /**
@@ -268,6 +308,7 @@ function closeNewsModal() {
     const modal = document.getElementById('news-modal');
     if (modal) {
         modal.classList.remove('open');
+        modal.style.display = 'none';
         document.body.style.overflow = 'auto';
         
         // Parar vídeos
@@ -279,7 +320,7 @@ function closeNewsModal() {
         
         currentModalNews = null;
         
-        console.log('Modal fechado com sucesso!');
+        console.log('Modal fechado');
     }
 }
 
@@ -288,7 +329,7 @@ function closeNewsModal() {
  */
 function setupNewsModal() {
     const modal = document.getElementById('news-modal');
-    const closeBtn = modal?.querySelector('.close-modal');
+    const closeBtn = document.querySelector('.close-modal');
     
     console.log('Configurando modal...');
     
@@ -297,7 +338,7 @@ function setupNewsModal() {
         closeBtn.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            console.log('Clicou no X para fechar');
+            console.log('Fechando modal via botão X');
             closeNewsModal();
         });
     }
@@ -306,7 +347,7 @@ function setupNewsModal() {
     if (modal) {
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
-                console.log('Clicou fora do modal para fechar');
+                console.log('Fechando modal via clique fora');
                 closeNewsModal();
             }
         });
@@ -314,20 +355,199 @@ function setupNewsModal() {
     
     // Fechar com ESC
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.classList.contains('open')) {
-            console.log('Pressionou ESC para fechar');
-            closeNewsModal();
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('news-modal');
+            if (modal && modal.classList.contains('open')) {
+                console.log('Fechando modal via ESC');
+                closeNewsModal();
+            }
         }
     });
 
     // Prevenir que eventos se propaguem para o conteúdo do modal
-    const modalContent = modal?.querySelector('.news-modal-content');
+    const modalContent = document.querySelector('.news-modal-content');
     if (modalContent) {
         modalContent.addEventListener('click', function(e) {
             e.stopPropagation();
         });
     }
 }
+
+// =============================================
+// SISTEMA DE COMPARTILHAMENTO
+// =============================================
+
+/**
+ * Gera URL única para a notícia
+ */
+function generateNewsUrl(newsId) {
+    const baseUrl = window.location.origin + window.location.pathname;
+    return `${baseUrl}?news=${newsId}&utm_source=share&utm_medium=social&utm_campaign=news_sharing`;
+}
+
+/**
+ * Compartilha notícia no WhatsApp
+ */
+function shareOnWhatsApp() {
+    if (!currentModalNews) {
+        console.error('Nenhuma notícia selecionada para compartilhar');
+        return;
+    }
+    
+    const news = currentModalNews;
+    const newsUrl = generateNewsUrl(news.id);
+    const shareText = `📰 *${news.title}*
+
+${news.description || 'Confira esta notícia incrível!'}
+
+💇 *Girosa Beauty*
+_Transformando sua beleza com excelência_
+
+🔗 ${newsUrl}`;
+
+    const encodedText = encodeURIComponent(shareText);
+    const whatsappUrl = `https://wa.me/?text=${encodedText}`;
+    
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+    
+    trackShare('whatsapp', news.id);
+    showNotification('Compartilhando no WhatsApp...', 'success');
+}
+
+/**
+ * Compartilha notícia no Facebook
+ */
+function shareOnFacebook() {
+    if (!currentModalNews) return;
+    
+    const news = currentModalNews;
+    const newsUrl = generateNewsUrl(news.id);
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(newsUrl)}`;
+    
+    window.open(facebookUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
+    
+    trackShare('facebook', news.id);
+    showNotification('Compartilhando no Facebook...', 'success');
+}
+
+/**
+ * Compartilha notícia no Twitter
+ */
+function shareOnTwitter() {
+    if (!currentModalNews) return;
+    
+    const news = currentModalNews;
+    const newsUrl = generateNewsUrl(news.id);
+    const shareText = `${news.title} - Girosa Beauty`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(newsUrl)}`;
+    
+    window.open(twitterUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
+    
+    trackShare('twitter', news.id);
+    showNotification('Compartilhando no Twitter...', 'success');
+}
+
+/**
+ * Compartilha notícia no LinkedIn
+ */
+function shareOnLinkedIn() {
+    if (!currentModalNews) return;
+    
+    const news = currentModalNews;
+    const newsUrl = generateNewsUrl(news.id);
+    const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(newsUrl)}`;
+    
+    window.open(linkedinUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
+    
+    trackShare('linkedin', news.id);
+    showNotification('Compartilhando no LinkedIn...', 'success');
+}
+
+/**
+ * Compartilha notícia via Email
+ */
+function shareOnEmail() {
+    if (!currentModalNews) return;
+    
+    const news = currentModalNews;
+    const newsUrl = generateNewsUrl(news.id);
+    const subject = `Notícia: ${news.title} - Girosa Beauty`;
+    const body = `Olá!
+
+Confira esta notícia do Girosa Beauty:
+
+${news.title}
+
+${news.description || 'Uma notícia incrível sobre beleza e cuidados capilares.'}
+
+Acesse: ${newsUrl}
+
+Atenciosamente,
+Girosa Beauty`;
+
+    const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoUrl;
+    
+    trackShare('email', news.id);
+}
+
+/**
+ * Copia link da notícia para área de transferência
+ */
+async function copyNewsLink() {
+    if (!currentModalNews) return;
+    
+    const news = currentModalNews;
+    const newsUrl = generateNewsUrl(news.id);
+    
+    try {
+        await navigator.clipboard.writeText(newsUrl);
+        showCopyFeedback();
+        trackShare('copy_link', news.id);
+    } catch (err) {
+        // Fallback para navegadores antigos
+        const textArea = document.createElement('textarea');
+        textArea.value = newsUrl;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showCopyFeedback();
+        trackShare('copy_link', news.id);
+    }
+}
+
+/**
+ * Compartilhamento nativo (Web Share API)
+ */
+function shareNative() {
+    if (!currentModalNews) return;
+    
+    const news = currentModalNews;
+    const newsUrl = generateNewsUrl(news.id);
+    
+    if (navigator.share) {
+        navigator.share({
+            title: news.title,
+            text: news.description || 'Confira esta notícia da Girosa Beauty',
+            url: newsUrl,
+        })
+        .then(() => {
+            trackShare('native', news.id);
+            showNotification('Notícia compartilhada com sucesso!', 'success');
+        })
+        .catch((error) => {
+            console.log('Erro ao compartilhar:', error);
+            showNotification('Compartilhamento cancelado', 'info');
+        });
+    } else {
+        showNotification('Compartilhamento nativo não suportado', 'info');
+    }
+}
+
+// =============================================
+// FUNÇÕES AUXILIARES
+// =============================================
 
 /**
  * Manipula as reações às notícias
@@ -348,23 +568,25 @@ function handleReaction(button, type, newsId) {
     // Mostrar feedback
     showNotification(`Reação "${getReactionLabel(type)}" registrada!`, 'success');
     
-    // Aqui você pode enviar a reação para o backend
+    // Enviar reação para o servidor
     sendReactionToServer(newsId, type);
+}
+
+/**
+ * Manipula reações no modal
+ */
+function handleModalReaction(button, type) {
+    if (!currentModalNews) return;
+    
+    handleReaction(button, type, currentModalNews.id);
 }
 
 /**
  * Envia reação para o servidor
  */
 function sendReactionToServer(newsId, reaction) {
-    // Simular envio para API
     console.log(`Enviando reação: Notícia ${newsId} - ${reaction}`);
-    
-    // Em produção, substituir por:
-    // fetch('/api/news/reaction', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ newsId, reaction })
-    // });
+    // Em produção, substituir por chamada real à API
 }
 
 /**
@@ -386,7 +608,7 @@ function loadSavedReactions() {
     const reactions = JSON.parse(localStorage.getItem('news-reactions') || '{}');
     
     Object.keys(reactions).forEach(newsId => {
-        const button = document.querySelector(`[onclick*="handleReaction(this, '${reactions[newsId]}', ${newsId})"]`);
+        const button = document.querySelector(`[onclick*="handleReaction(this, '${reactions[newsId]}', '${newsId}')"]`);
         if (button) {
             button.classList.add('active');
         }
@@ -394,151 +616,72 @@ function loadSavedReactions() {
 }
 
 /**
- * Configura o sistema de filtros de notícias
+ * Track compartilhamentos
  */
-function setupNewsFilters() {
-    const filterButtons = document.querySelectorAll('.news-filter-btn');
-    const searchInput = document.getElementById('news-search');
+function trackShare(platform, newsId) {
+    console.log(`Notícia ${newsId} compartilhada via ${platform}`);
     
-    if (filterButtons.length === 0 || !searchInput) return;
-    
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            applyNewsFilters();
-        });
-    });
-    
-    searchInput.addEventListener('input', applyNewsFilters);
-}
-
-/**
- * Aplica os filtros de notícias
- */
-function applyNewsFilters() {
-    const activeFilter = document.querySelector('.news-filter-btn.active');
-    const searchInput = document.getElementById('news-search');
-    
-    if (!activeFilter || !searchInput) return;
-    
-    const filterType = activeFilter.getAttribute('data-filter');
-    const searchTerm = searchInput.value.toLowerCase();
-    
-    const newsCards = document.querySelectorAll('.news-card');
-    
-    newsCards.forEach(card => {
-        const newsId = card.getAttribute('data-news-id');
-        const news = currentNewsList.find(n => n.id == newsId);
-        
-        if (!news) return;
-        
-        const titleMatch = news.title.toLowerCase().includes(searchTerm);
-        const descriptionMatch = news.description.toLowerCase().includes(searchTerm);
-        const searchMatch = titleMatch || descriptionMatch;
-        
-        let filterMatch = true;
-        
-        switch(filterType) {
-            case 'all':
-                filterMatch = true;
-                break;
-            case 'featured':
-                filterMatch = news.priority >= 4;
-                break;
-            case 'videos':
-                filterMatch = news.video && isValidUrl(news.video);
-                break;
-            case 'images':
-                filterMatch = news.image && isValidUrl(news.image);
-                break;
-        }
-        
-        if (filterMatch && searchMatch) {
-            card.style.display = 'block';
-            card.style.animation = 'fadeInUp 0.5s ease';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-}
-
-/**
- * Configura o sistema de compartilhamento
- */
-function setupSharing() {
-    const shareButtons = document.querySelectorAll('.share-news-btn');
-    
-    shareButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const newsId = this.getAttribute('data-news-id');
-            const news = currentNewsList.find(n => n.id == newsId);
-            
-            if (news) {
-                shareNews(news);
-            }
-        });
-    });
-}
-
-/**
- * Compartilha notícia
- */
-function shareNews(news) {
-    const shareText = `📰 ${news.title}
-
-${news.description}
-
-🔗 Confira esta notícia no site da Girosa Beauty!`;
-
-    if (navigator.share) {
-        navigator.share({
-            title: news.title,
-            text: shareText,
-            url: window.location.href
-        });
-    } else if (navigator.clipboard) {
-        navigator.clipboard.writeText(shareText).then(() => {
-            showNotification('Notícia copiada para a área de transferência!', 'success');
-        });
-    } else {
-        prompt('Copie o texto para compartilhar:', shareText);
+    // Salvar no localStorage para estatísticas
+    const shares = JSON.parse(localStorage.getItem('news-shares') || '{}');
+    if (!shares[newsId]) {
+        shares[newsId] = {};
     }
+    shares[newsId][platform] = (shares[newsId][platform] || 0) + 1;
+    shares[newsId].last_shared = new Date().toISOString();
+    localStorage.setItem('news-shares', JSON.stringify(shares));
 }
-
-// =============================================
-// INICIALIZAÇÃO DA PÁGINA NOTICIA
-// =============================================
 
 /**
- * Inicializa a página de notícias
+ * Mostra feedback quando link é copiado
  */
-function initNoticiaPage() {
-    console.log('Inicializando página de notícias...');
+function showCopyFeedback() {
+    // Remove feedback anterior se existir
+    const existingFeedback = document.querySelector('.copy-feedback');
+    if (existingFeedback) {
+        existingFeedback.remove();
+    }
     
-    // Carregar notícias
-    loadNewsFromDB();
+    const feedback = document.createElement('div');
+    feedback.className = 'copy-feedback active';
+    feedback.innerHTML = `
+        <i class="fas fa-check-circle" style="color: #22c55e;"></i>
+        Link copiado para a área de transferência!
+    `;
     
-    // Configurar sistemas
-    setupNewsModal();
-    setupNewsFilters();
-    setupSharing();
+    document.body.appendChild(feedback);
     
-    // Carregar reações salvas
+    // Remove após 2 segundos
     setTimeout(() => {
-        loadSavedReactions();
-    }, 1000);
-    
-    console.log('Página de notícias inicializada com sucesso');
+        feedback.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => {
+            if (feedback.parentNode) {
+                feedback.remove();
+            }
+        }, 300);
+    }, 2000);
 }
 
-// Inicializar quando o DOM estiver carregado
-if (document.getElementById('news-container') || document.querySelector('.news-grid')) {
-    document.addEventListener('DOMContentLoaded', initNoticiaPage);
+/**
+ * Mostra erro ao carregar notícias
+ */
+function showErrorNews() {
+    const container = document.getElementById("news-container");
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="error-state">
+            <div class="error-icon">📰</div>
+            <h3>Erro ao carregar notícias</h3>
+            <p>Não foi possível carregar as notícias no momento.</p>
+            <button onclick="loadNewsFromDB()" class="retry-btn">
+                🔄 Tentar Novamente
+            </button>
+        </div>
+    `;
 }
 
 // =============================================
-// FUNÇÕES AUXILIARES - NOTICIA
+// FUNÇÕES UTILITÁRIAS
 // =============================================
 
 /**
@@ -579,25 +722,6 @@ function formatNewsDate(dateString) {
     } catch (error) {
         return 'Data inválida';
     }
-}
-
-/**
- * Mostra erro ao carregar notícias
- */
-function showErrorNews() {
-    const container = document.getElementById("news-container");
-    if (!container) return;
-
-    container.innerHTML = `
-        <div class="error-state">
-            <div class="error-icon">📰</div>
-            <h3>Erro ao carregar notícias</h3>
-            <p>Não foi possível carregar as notícias no momento.</p>
-            <button onclick="loadNewsFromDB()" class="retry-btn">
-                🔄 Tentar Novamente
-            </button>
-        </div>
-    `;
 }
 
 /**
@@ -672,17 +796,45 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// Animação para as notícias
-const newsStyle = document.createElement('style');
-newsStyle.textContent = `
-    @keyframes fadeInUp {
+// =============================================
+// INICIALIZAÇÃO DA PÁGINA
+// =============================================
+
+/**
+ * Inicializa a página de notícias
+ */
+function initNoticiaPage() {
+    console.log('Inicializando página de notícias...');
+    
+    // Configurar modal primeiro
+    setupNewsModal();
+    
+    // Carregar notícias
+    loadNewsFromDB();
+    
+    // Carregar reações salvas
+    setTimeout(() => {
+        loadSavedReactions();
+    }, 1000);
+    
+    console.log('Página de notícias inicializada com sucesso');
+}
+
+// Inicializar quando o DOM estiver carregado
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM carregado, inicializando página de notícias...');
+    initNoticiaPage();
+});
+
+// Adicionar animação de fadeOut
+const shareStyle = document.createElement('style');
+shareStyle.textContent = `
+    @keyframes fadeOut {
         from {
-            opacity: 0;
-            transform: translateY(20px);
+            opacity: 1;
         }
         to {
-            opacity: 1;
-            transform: translateY(0);
+            opacity: 0;
         }
     }
     
@@ -707,301 +859,23 @@ newsStyle.textContent = `
             opacity: 0;
         }
     }
+    
+    .no-media-placeholder {
+        background: #f8f9fa;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+    }
+    
+    .placeholder-content {
+        text-align: center;
+    }
+    
+    .placeholder-icon {
+        font-size: 3rem;
+        margin-bottom: 10px;
+    }
 `;
-document.head.appendChild(newsStyle);
-
-// =============================================
-// SISTEMA DE COMPARTILHAMENTO DE NOTÍCIAS - CORRIGIDO COM LINKS
-// =============================================
-
-/**
- * Gera URL única para a notícia
- */
-function generateNewsUrl(newsId) {
-    const baseUrl = window.location.origin + window.location.pathname;
-    return `${baseUrl}?news=${newsId}&utm_source=share&utm_medium=social&utm_campaign=news_sharing`;
-}
-
-/**
- * Compartilha notícia no WhatsApp - CORRIGIDO COM LINK
- */
-function shareOnWhatsApp() {
-    if (!currentModalNews) return;
-    
-    const news = currentModalNews;
-    const newsUrl = generateNewsUrl(news.id);
-    const shareText = `📰 *${news.title}*
-
-${news.description || 'Confira esta notícia incrível!'}
-
-💇 *Girosa Beauty*
-_Transformando sua beleza com excelência_
-
-🔗 ${newsUrl}`;
-
-    const encodedText = encodeURIComponent(shareText);
-    const whatsappUrl = `https://wa.me/?text=${encodedText}`;
-    
-    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-    
-    // Tracking de compartilhamento
-    trackShare('whatsapp', news.id);
-}
-
-/**
- * Compartilha notícia no Facebook - CORRIGIDO COM LINK
- */
-function shareOnFacebook() {
-    if (!currentModalNews) return;
-    
-    const news = currentModalNews;
-    const newsUrl = generateNewsUrl(news.id);
-    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(newsUrl)}`;
-    
-    window.open(facebookUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
-    
-    // Tracking de compartilhamento
-    trackShare('facebook', news.id);
-}
-
-/**
- * Compartilha notícia no Twitter - NOVA FUNÇÃO
- */
-function shareOnTwitter() {
-    if (!currentModalNews) return;
-    
-    const news = currentModalNews;
-    const newsUrl = generateNewsUrl(news.id);
-    const shareText = `${news.title} - Girosa Beauty`;
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(newsUrl)}`;
-    
-    window.open(twitterUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
-    
-    trackShare('twitter', news.id);
-}
-
-/**
- * Compartilha notícia no LinkedIn - NOVA FUNÇÃO
- */
-function shareOnLinkedIn() {
-    if (!currentModalNews) return;
-    
-    const news = currentModalNews;
-    const newsUrl = generateNewsUrl(news.id);
-    const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(newsUrl)}`;
-    
-    window.open(linkedinUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
-    
-    trackShare('linkedin', news.id);
-}
-
-/**
- * Compartilha notícia via Email - NOVA FUNÇÃO
- */
-function shareOnEmail() {
-    if (!currentModalNews) return;
-    
-    const news = currentModalNews;
-    const newsUrl = generateNewsUrl(news.id);
-    const subject = `Notícia: ${news.title} - Girosa Beauty`;
-    const body = `Olá!
-
-Confira esta notícia do Girosa Beauty:
-
-${news.title}
-
-${news.description || 'Uma notícia incrível sobre beleza e cuidados capilares.'}
-
-Acesse: ${newsUrl}
-
-Atenciosamente,
-Girosa Beauty`;
-
-    const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailtoUrl;
-    
-    trackShare('email', news.id);
-}
-
-/**
- * Copia link da notícia para área de transferência - CORRIGIDO
- */
-async function copyNewsLink() {
-    if (!currentModalNews) return;
-    
-    const news = currentModalNews;
-    const newsUrl = generateNewsUrl(news.id);
-    
-    try {
-        await navigator.clipboard.writeText(newsUrl);
-        showCopyFeedback();
-        trackShare('copy_link', news.id);
-    } catch (err) {
-        // Fallback para navegadores antigos
-        const textArea = document.createElement('textarea');
-        textArea.value = newsUrl;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        showCopyFeedback();
-        trackShare('copy_link', news.id);
-    }
-}
-
-/**
- * Compartilhamento nativo (Web Share API) - CORRIGIDO COM LINK
- */
-function shareNative() {
-    if (!currentModalNews) return;
-    
-    const news = currentModalNews;
-    const newsUrl = generateNewsUrl(news.id);
-    
-    if (navigator.share) {
-        navigator.share({
-            title: news.title,
-            text: news.description || 'Confira esta notícia da Girosa Beauty',
-            url: newsUrl,
-        })
-        .then(() => {
-            trackShare('native', news.id);
-            showNotification('Notícia compartilhada com sucesso!', 'success');
-        })
-        .catch((error) => {
-            console.log('Erro ao compartilhar:', error);
-            showNotification('Compartilhamento cancelado', 'info');
-        });
-    } else {
-        // Fallback: abrir modal de compartilhamento customizado
-        openShareModal();
-    }
-}
-
-/**
- * Abre modal de compartilhamento customizado - ATUALIZADO COM MAIS OPÇÕES
- */
-function openShareModal() {
-    // Remove modal anterior se existir
-    const existingModal = document.querySelector('.share-overlay');
-    if (existingModal) {
-        existingModal.remove();
-    }
-    
-    const overlay = document.createElement('div');
-    overlay.className = 'share-overlay active';
-    
-    overlay.innerHTML = `
-        <div class="share-modal">
-            <h3>
-                <i class="fas fa-share-alt"></i>
-                Compartilhar Notícia
-            </h3>
-            <p>Escolha como deseja compartilhar esta notícia:</p>
-            <div class="share-modal-buttons">
-                <button class="share-btn whatsapp-btn" onclick="shareOnWhatsApp()">
-                    <i class="fab fa-whatsapp"></i>
-                    WhatsApp
-                </button>
-                <button class="share-btn facebook-btn" onclick="shareOnFacebook()">
-                    <i class="fab fa-facebook"></i>
-                    Facebook
-                </button>
-                <button class="share-btn twitter-btn" onclick="shareOnTwitter()">
-                    <i class="fab fa-twitter"></i>
-                    Twitter
-                </button>
-                <button class="share-btn linkedin-btn" onclick="shareOnLinkedIn()">
-                    <i class="fab fa-linkedin"></i>
-                    LinkedIn
-                </button>
-                <button class="share-btn email-btn" onclick="shareOnEmail()">
-                    <i class="fas fa-envelope"></i>
-                    Email
-                </button>
-                <button class="share-btn copy-btn" onclick="copyNewsLink()">
-                    <i class="fas fa-link"></i>
-                    Copiar Link
-                </button>
-                <button class="share-btn" onclick="closeShareModal()" style="background: #6B7280;">
-                    <i class="fas fa-times"></i>
-                    Cancelar
-                </button>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(overlay);
-    
-    // Fechar modal ao clicar fora
-    overlay.addEventListener('click', function(e) {
-        if (e.target === overlay) {
-            closeShareModal();
-        }
-    });
-    
-    // Fechar com ESC
-    const closeWithEsc = function(e) {
-        if (e.key === 'Escape') {
-            closeShareModal();
-            document.removeEventListener('keydown', closeWithEsc);
-        }
-    };
-    document.addEventListener('keydown', closeWithEsc);
-}
-
-// =============================================
-// SISTEMA DE CARREGAMENTO DE NOTÍCIA ESPECÍFICA
-// =============================================
-
-/**
- * Carrega notícia específica baseada na URL
- */
-function loadSpecificNewsFromUrl() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const newsId = urlParams.get('news');
-    
-    if (newsId) {
-        // Encontrar a notícia pelo ID
-        const news = currentNewsList.find(n => n.id == newsId);
-        if (news) {
-            // Abrir modal automaticamente
-            setTimeout(() => {
-                openNewsModal(news);
-            }, 1000);
-            
-            // Rolar até as notícias
-            document.getElementById('news')?.scrollIntoView({ 
-                behavior: 'smooth' 
-            });
-        }
-    }
-}
-
-/**
- * Atualiza a função de inicialização para carregar notícia específica
- */
-function initNoticiaPageWithSharing() {
-    console.log('Inicializando página de notícias com sistema de compartilhamento...');
-    
-    // Sobrescrever a função de renderização
-    window.renderNews = renderNewsWithSharing;
-    
-    // Carregar notícias
-    loadNewsFromDB().then(() => {
-        // Após carregar notícias, verificar se há uma específica para abrir
-        loadSpecificNewsFromUrl();
-    });
-    
-    // Configurar sistemas
-    setupNewsModal();
-    setupNewsFilters();
-    setupSharing();
-    
-    // Carregar reações salvas
-    setTimeout(() => {
-        loadSavedReactions();
-    }, 1000);
-    
-    console.log('Página de notícias com compartilhamento inicializada com sucesso');
-}
+document.head.appendChild(shareStyle);
