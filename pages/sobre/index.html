@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre - Girosa Beauty</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="sobre.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="gb-header" id="main-header">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand gb-logo" href="../../index.html">
+                <span class="logo-text">GB</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../index.html">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../servicos/index.html">Serviços</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">Sobre</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- HERO -->
+<section class="about-hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Girosa Beauty</h1>
+            <p>Beleza, técnica e cuidado em cada detalhe.</p>
+        </div>
+    </div>
+</section>
+
+<!-- SOBRE DE VERDADE -->
+<section class="about-content py-5">
+    <div class="container">
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-6">
+                <h2>Quem somos</h2>
+                <p>
+                    O Girosa Beauty é um espaço especializado em tranças, cortes e cuidados com o cabelo,
+                    focado em entregar resultado real, atendimento respeitoso e um ambiente confortável.
+                </p>
+
+                <p>
+                    Trabalhamos com técnicas atualizadas, materiais de qualidade e atenção total a cada cliente.
+                    Aqui, cada serviço é feito pensando no seu estilo, no seu conforto e no resultado final.
+                </p>
+
+                <p>
+                    Sem pressa, sem improviso e sem promessa vazia.  
+                    Você chega sabendo o que vai fazer e sai vendo o resultado.
+                </p>
+
+                <div class="about-highlights mt-4">
+                    <div class="highlight-item">
+                        <i class="fas fa-check-circle"></i>
+                        Atendimento profissional
+                    </div>
+                    <div class="highlight-item">
+                        <i class="fas fa-check-circle"></i>
+                        Trabalhamos com jumbo
+                    </div>
+                    <div class="highlight-item">
+                        <i class="fas fa-check-circle"></i>
+                        Preço claro, sem surpresa
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="about-image">
+                    <img 
+                        src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=900&q=80"
+                        alt="Girosa Beauty"
+                        class="img-fluid rounded"
+                    >
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="about-cta py-5">
+    <div class="container text-center">
+        <h2>Pronta para agendar?</h2>
+        <p>Escolha seu serviço e marque seu horário.</p>
+        <a href="../servicos/index.html" class="btn btn-primary btn-lg">
+            Ver serviços
+        </a>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="gb-footer">
+        <div class="container">
+            <div class="row">
+                
+                
+                <div class="col-lg-4 mb-4">
+                    <h4>Horário de Funcionamento</h4>
+                    <ul class="footer-list">
+                        <li><i class="fas fa-clock"></i> Segunda - Sexta: 9h às 21h</li>
+                        <li><i class="fas fa-clock"></i> Sábado: 9h às 18h</li>
+                        <li><i class="fas fa-clock"></i> Domingo: Fechado</li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <h4>Contato</h4>
+                    <ul class="footer-list">
+                        <li><i class="fas fa-map-marker-alt"></i> R José Antônio pires, 882</li>
+                        <li><i class="fas fa-phone"></i> (44) 9918-0116</li>
+                        <li><i class="fas fa-envelope"></i> contato@samgrowthlabs.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; <span id="current-year"></span> Girosa Beauty - Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../supabase-config.js"></script>
+<script src="sobre.js"></script>
+
+<script>
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>

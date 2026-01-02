@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Serviço - Girosa Beauty</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="agendar.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="gb-header" id="main-header">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand gb-logo" href="../../index.html">
+                    <span class="logo-text">GB</span>
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="../../index.html">Início</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../servicos/index.html">Serviços</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../sobre/index.html">Sobre</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="index.html">Agendar</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Agendamento -->
+    <section class="booking-hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 id="booking-service-title">Agendar Serviço</h1>
+                <p id="booking-service-desc">Preencha o formulário abaixo para agendar seu horário</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detalhes do Serviço -->
+    <section class="service-details">
+        <div class="container">
+            <div class="service-summary" id="service-summary">
+                <!-- Detalhes carregados dinamicamente -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulário de Agendamento -->
+    <section class="booking-form-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="booking-form-container">
+                        <div class="form-header">
+                            <h2><i class="fas fa-calendar-alt me-2"></i>Formulário de Agendamento</h2>
+                            <p>Preencha todos os campos para confirmar seu agendamento</p>
+                        </div>
+                        
+                        <form id="bookingForm">
+                            <div class="form-group">
+                                <label for="client-name">Nome Completo *</label>
+                                <input type="text" id="client-name" class="form-control" required>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="client-phone">Telefone/WhatsApp *</label>
+                                        <input type="tel" id="client-phone" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="client-cpf">CPF (opcional)</label>
+                                        <input type="text" id="client-cpf" class="form-control" placeholder="Apenas números">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="preferred-date">Data Preferencial *</label>
+                                        <input type="date" id="preferred-date" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="preferred-time">Horário Preferencial *</label>
+                                        <select id="preferred-time" class="form-control" required>
+                                            <option value="">Selecione um horário</option>
+                                            <option value="09:00">09:00</option>
+                                            <option value="10:00">10:00</option>
+                                            <option value="11:00">11:00</option>
+                                            <option value="12:00">12:00</option>
+                                            <option value="13:00">13:00</option>
+                                            <option value="14:00">14:00</option>
+                                            <option value="15:00">15:00</option>
+                                            <option value="16:00">16:00</option>
+                                            <option value="17:00">17:00</option>
+                                            <option value="18:00">18:00</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Opção de Jumbo -->
+                            <div class="form-group" id="jumbo-options-section">
+                                <label>Opção de Jumbo</label>
+                                <div class="jumbo-options">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="jumbo-option" id="jumbo-salon" value="salon" checked>
+                                        <label class="form-check-label" for="jumbo-salon">
+                                            Usar jumbo do salão
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="jumbo-option" id="jumbo-own" value="own">
+                                        <label class="form-check-label" for="jumbo-own">
+                                            Trazer meu jumbo próprio (desconto aplicado)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="observations">Observações ou Solicitações Especiais</label>
+                                <textarea id="observations" class="form-control" rows="4" placeholder="Alguma informação adicional ou preferência específica..."></textarea>
+                            </div>
+                            
+                            <div class="price-summary" id="price-summary">
+                                <!-- Resumo do preço atualizado dinamicamente -->
+                            </div>
+                            
+                            <div class="form-footer">
+                                <button type="submit" class="btn-whatsapp">
+                                    <i class="fab fa-whatsapp me-2"></i>Confirmar Agendamento via WhatsApp
+                                </button>
+                                <p class="form-note">* Campos obrigatórios</p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="gb-footer">
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-lg-4 mb-4">
+                    <h4>Horário de Funcionamento</h4>
+                    <ul class="footer-list">
+                        <li><i class="fas fa-clock"></i> Segunda - Sexta: 9h às 21h</li>
+                        <li><i class="fas fa-clock"></i> Sábado: 9h às 18h</li>
+                        <li><i class="fas fa-clock"></i> Domingo: Fechado</li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <h4>Contato</h4>
+                    <ul class="footer-list">
+                        <li><i class="fas fa-map-marker-alt"></i> R José Antônio pires, 882</li>
+                        <li><i class="fas fa-phone"></i> (44) 9918-0116</li>
+                        <li><i class="fas fa-envelope"></i> contato@samgrowthlabs.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; <span id="current-year"></span> Girosa Beauty - Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../supabase-config.js"></script>
+    <script src="agendar.js"></script>
+</body>
+</html>

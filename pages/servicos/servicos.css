@@ -1,0 +1,364 @@
+/* Estilos específicos para página de serviços */
+
+.services-hero {
+    background: linear-gradient(rgba(102, 102, 102, 0.8), rgba(0, 0, 0, 0.8)), 
+                url('https://images.unsplash.com/photo-1562322140-8baeececf3df?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+    background-size: cover;
+    background-position: center;
+    color: var(--light-color);
+    text-align: center;
+    padding: 140px 0 80px;
+    margin-top: 70px;
+}
+
+.services-hero h1 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.services-hero p {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.services-filters {
+    padding: 50px 0;
+    background-color: var(--light-color);
+    border-bottom: 1px solid var(--gray-light);
+}
+
+.filter-section {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.filter-section h3 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+}
+
+.filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.filter-btn {
+    background: none;
+    border: 2px solid var(--gray-color);
+    color: var(--gray-color);
+    padding: 10px 25px;
+    border-radius: 0;
+    font-weight: 600;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--light-color);
+}
+
+.all-services {
+    padding: 80px 0;
+    background-color: var(--gray-light);
+}
+
+.services-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.service-item {
+    background: var(--light-color);
+    border: 1px solid var(--gray-light);
+    transition: var(--transition);
+    position: relative;
+    cursor: pointer;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.service-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.service-image {
+    height: 200px;
+    overflow: hidden;
+}
+
+.service-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.service-item:hover .service-image img {
+    transform: scale(1.1);
+}
+
+.service-content {
+    padding: 25px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-header {
+    margin-bottom: 15px;
+}
+
+.service-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.service-gender {
+    display: inline-block;
+    background-color: var(--gray-light);
+    color: var(--gray-color);
+    padding: 3px 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.service-description {
+    color: var(--gray-color);
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    flex-grow: 1;
+}
+
+.service-price {
+    margin: 15px 0;
+}
+
+.price-container {
+    display: flex;
+    align-items: baseline;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: var(--gray-color);
+    font-size: 1rem;
+}
+
+.discount-price {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    font-weight: 900;
+}
+
+.discount-badge {
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-left: 10px;
+}
+
+.service-features {
+    margin-top: 20px;
+}
+
+.service-feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    color: var(--gray-dark);
+}
+
+.service-feature i {
+    color: var(--primary-color);
+    width: 20px;
+}
+
+.jumbo-info {
+    background-color: var(--gray-light);
+    padding: 12px 15px;
+    margin-top: 15px;
+    border-left: 3px solid var(--primary-color);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.jumbo-info i {
+    color: var(--primary-color);
+}
+
+.service-footer {
+    padding: 0 25px 25px;
+}
+
+.btn-service-detail {
+    width: 100%;
+    padding: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    border: none;
+    transition: var(--transition);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-service-detail:hover {
+    background-color: var(--dark-color);
+    transform: translateY(-2px);
+}
+
+.loading-spinner {
+    text-align: center;
+    padding: 60px 0;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid var(--gray-light);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ===== CORREÇÃO PARA HEADER COM PROMOÇÃO ===== */
+/* REMOVER QUALQUER ANIMAÇÃO DO HEADER QUE DEIXE O TEXTO INVISÍVEL */
+#main-header {
+    animation: none !important;
+    opacity: 1 !important;
+}
+
+/* Garantir que os links do header tenham contraste */
+.nav-link {
+    color: inherit !important;
+    transition: color 0.3s ease !important;
+}
+
+/* Quando hover, tornar o texto mais claro */
+.nav-link:hover {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Aba ativa deve ser bem visível */
+.nav-link.active {
+    font-weight: 600 !important;
+    border-bottom: 2px solid currentColor !important;
+}
+
+/* Responsividade */
+@media (max-width: 992px) {
+    .services-hero {
+        padding: 100px 0 50px;
+    }
+    
+    .services-hero h1 {
+        font-size: 2.8rem;
+    }
+    
+    .services-container {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .services-hero {
+        padding: 80px 0 40px;
+    }
+    
+    .services-hero h1 {
+        font-size: 2.2rem;
+    }
+    
+    .services-hero p {
+        font-size: 1.1rem;
+    }
+    
+    .services-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .filter-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .filter-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    /* Mobile: garantir contraste no menu */
+    .navbar-collapse {
+        background-color: inherit !important;
+    }
+    
+    .nav-link {
+        padding: 12px 20px !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .services-hero h1 {
+        font-size: 1.8rem;
+    }
+    
+    .filter-section h3 {
+        font-size: 1.2rem;
+    }
+    
+    .service-content {
+        padding: 20px;
+    }
+    
+    .service-footer {
+        padding: 0 20px 20px;
+    }
+}
