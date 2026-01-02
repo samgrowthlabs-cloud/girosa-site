@@ -7,25 +7,207 @@
     background-position: center;
     color: var(--light-color);
     text-align: center;
-    padding: 140px 0 60px;
+    padding: 120px 0 50px;
     margin-top: 70px;
 }
 
 .booking-hero h1 {
-    font-size: 3rem;
-    font-weight: 900;
+    font-size: 2.5rem;
+    font-weight: 800;
     margin-bottom: 15px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
 }
 
 .booking-hero p {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     opacity: 0.9;
     max-width: 600px;
     margin: 0 auto;
+    font-weight: 300;
 }
 
+/* ===== IMAGEM DO SERVIÇO - ESTILO AMAZON ===== */
+.service-image-section {
+    padding: 30px 0;
+    background: #ffffff;
+}
+
+.service-image-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.service-image-box {
+    position: relative;
+    width: 100%;
+    height: 380px; /* Tamanho médio fixo */
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid #eaeaea;
+    transition: all 0.3s ease;
+}
+
+/* Container principal da imagem */
+.service-image-main {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: crosshair;
+    overflow: hidden;
+}
+
+/* Imagem com tamanho padrão */
+.service-image-main img {
+    max-width: 85%;
+    max-height: 85%;
+    object-fit: contain;
+    transition: transform 0.5s ease;
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* Efeito hover ZOOM igual Amazon */
+.service-image-box:hover .service-image-main img {
+    transform: scale(1.1);
+}
+
+/* Lente de zoom (aparece no hover) */
+.image-zoom-lens {
+    position: absolute;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.3);
+    cursor: none;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+    border-radius: 50%;
+}
+
+.service-image-box:hover .image-zoom-lens {
+    opacity: 1;
+}
+
+/* Container do zoom (lado direito) */
+.image-zoom-container {
+    position: absolute;
+    top: 0;
+    right: -420px;
+    width: 400px;
+    height: 400px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 100;
+    border: 1px solid #eaeaea;
+}
+
+.service-image-box:hover .image-zoom-container {
+    opacity: 1;
+    visibility: visible;
+    right: -430px;
+}
+
+/* Imagem ampliada no container de zoom */
+.zoomed-image {
+    width: 100%;
+    height: 100%;
+    background-size: 200% 200%;
+    background-position: 0% 0%;
+    background-repeat: no-repeat;
+}
+
+/* Placeholder quando não tem imagem */
+.service-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
+    color: #6c757d;
+    border-radius: 12px;
+}
+
+.service-image-placeholder i {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+    opacity: 0.4;
+    color: var(--primary-color);
+}
+
+.service-image-placeholder p {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #888;
+    margin: 0;
+}
+
+/* Badge de promoção */
+.image-promo-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    z-index: 5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.5px;
+}
+
+/* Ícones de ação */
+.image-actions {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    display: flex;
+    gap: 10px;
+    z-index: 5;
+}
+
+.image-action-btn {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #eaeaea;
+}
+
+.image-action-btn:hover {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    color: var(--primary-color);
+}
+
+/* ===== DETALHES DO SERVIÇO ===== */
 .service-details {
     padding: 40px 0;
     background-color: var(--light-color);
@@ -100,6 +282,7 @@
     flex: 1;
 }
 
+/* ===== FORMULÁRIO ===== */
 .booking-form-section {
     padding: 60px 0;
     background-color: var(--gray-light);
@@ -281,14 +464,595 @@
     text-align: center;
 }
 
-/* Responsividade */
-@media (max-width: 992px) {
+/* ===== RESPONSIVIDADE ===== */
+
+/* Tablet (768px - 991px) */
+@media (max-width: 991px) {
+    .booking-hero {
+        padding: 100px 0 40px;
+    }
+    
+    .booking-hero h1 {
+        font-size: 2.2rem;
+    }
+    
+    .service-image-box {
+        height: 340px;
+    }
+    
+    .image-zoom-container {
+        display: none; /* Esconde zoom em tablet */
+    }
+    
+    .service-image-box:hover .service-image-main img {
+        transform: scale(1.05);
+    }
+    
+    .booking-form-container {
+        padding: 30px;
+    }
+}
+
+/* Tablet pequeno (576px - 767px) */
+@media (max-width: 768px) {
+    .booking-hero {
+        padding: 80px 0 30px;
+    }
+    
+    .booking-hero h1 {
+        font-size: 2rem;
+    }
+    
+    .booking-hero p {
+        font-size: 1.1rem;
+    }
+    
+    .service-image-box {
+        height: 320px;
+    }
+    
+    .service-image-main img {
+        max-width: 90%;
+        max-height: 90%;
+    }
+    
+    .service-summary {
+        padding: 20px;
+    }
+    
+    .summary-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .summary-price {
+        text-align: left;
+    }
+    
+    .detail-row {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .booking-form-container {
+        padding: 25px 20px;
+    }
+    
+    .form-header h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Mobile (até 576px) */
+@media (max-width: 576px) {
+    .booking-hero {
+        padding: 70px 0 25px;
+    }
+    
+    .booking-hero h1 {
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+    }
+    
+    .booking-hero p {
+        font-size: 1rem;
+        padding: 0 15px;
+    }
+    
+    .service-image-box {
+        height: 280px;
+    }
+    
+    .service-image-main img {
+        max-width: 95%;
+        max-height: 95%;
+        padding: 10px;
+    }
+    
+    .image-promo-badge {
+        top: 10px;
+        left: 10px;
+        padding: 5px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .image-actions {
+        bottom: 10px;
+        right: 10px;
+    }
+    
+    .image-action-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .price-total {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .btn-whatsapp {
+        padding: 15px 20px;
+        font-size: 1rem;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .btn-whatsapp i {
+        margin-right: 0;
+    }
+}
+
+/* Mobile muito pequeno (até 375px) */
+@media (max-width: 375px) {
+    .service-image-box {
+        height: 240px;
+    }
+    
+    .booking-hero h1 {
+        font-size: 1.6rem;
+    }
+    
+    .final-price-summary {
+        font-size: 1.8rem;
+    }
+    
+    .total-value {
+        font-size: 1.8rem;
+    }
+}
+
+/* Ajuste para orientação paisagem em mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .service-image-box {
+        height: 200px;
+    }
+}
+
+/* Estilos específicos para página de agendamento */
+
+.booking-hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), 
+                url('https://images.unsplash.com/photo-1562322140-8baeececf3df?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+    background-size: cover;
+    background-position: center;
+    color: var(--light-color);
+    text-align: center;
+    padding: 140px 0 60px;
+    margin-top: 70px;
+}
+
+.booking-hero h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.booking-hero p {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ===== IMAGEM DO SERVIÇO (SEM ZOOM) ===== */
+.service-image-section {
+    padding: 30px 0;
+    background: #ffffff;
+}
+
+.service-image-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.service-image-box {
+    position: relative;
+    width: 100%;
+    height: 380px; /* Tamanho médio fixo */
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid #eaeaea;
+}
+
+.service-image-main {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: #f8f9fa;
+}
+
+.service-image-main-img {
+    max-width: 85%;
+    max-height: 85%;
+    object-fit: contain;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* Badge de promoção */
+.image-promo-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Botão de tela cheia */
+.image-actions {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.image-action-btn {
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid #eaeaea;
+}
+
+.image-action-btn:hover {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    color: var(--primary-color);
+}
+
+/* Placeholder */
+.service-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
+    color: #6c757d;
+    border-radius: 12px;
+}
+
+.service-image-placeholder i {
+    font-size: 4rem;
+    margin-bottom: 15px;
+    opacity: 0.4;
+    color: var(--primary-color);
+}
+
+.service-image-placeholder p {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #888;
+    margin: 0;
+}
+
+/* ===== DETALHES DO SERVIÇO ===== */
+.service-details {
+    padding: 40px 0;
+    background-color: var(--light-color);
+}
+
+.service-summary {
+    background-color: var(--gray-light);
+    border: 1px solid var(--gray-color);
+    padding: 30px;
+    border-radius: 5px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.summary-header h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.summary-price {
+    text-align: right;
+}
+
+.original-price-summary {
+    text-decoration: line-through;
+    color: var(--gray-color);
+    font-size: 1.1rem;
+    display: block;
+}
+
+.final-price-summary {
+    color: var(--primary-color);
+    font-size: 2.2rem;
+    font-weight: 900;
+}
+
+.summary-details {
+    margin-top: 20px;
+}
+
+.detail-row {
+    display: flex;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: var(--primary-color);
+    min-width: 150px;
+}
+
+.detail-value {
+    color: var(--gray-color);
+    flex: 1;
+}
+
+/* ===== FORMULÁRIO ===== */
+.booking-form-section {
+    padding: 60px 0;
+    background-color: var(--gray-light);
+}
+
+.booking-form-container {
+    background: var(--light-color);
+    border: 1px solid var(--gray-color);
+    padding: 40px;
+    border-radius: 5px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.form-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-header p {
+    color: var(--gray-color);
+    font-size: 1.1rem;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 1rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--gray-color);
+    background-color: var(--light-color);
+    color: var(--primary-color);
+    font-size: 1rem;
+    transition: var(--transition);
+    border-radius: 0;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1);
+}
+
+.jumbo-options {
+    background-color: var(--gray-light);
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.form-check {
+    margin-bottom: 15px;
+}
+
+.form-check:last-child {
+    margin-bottom: 0;
+}
+
+.form-check-input {
+    margin-right: 10px;
+    margin-top: 5px;
+}
+
+.form-check-label {
+    color: var(--gray-color);
+    cursor: pointer;
+}
+
+.form-check-input:checked + .form-check-label {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.price-summary {
+    background-color: var(--gray-light);
+    padding: 25px;
+    margin: 30px 0;
+    border-left: 4px solid var(--primary-color);
+}
+
+.price-breakdown {
+    margin-bottom: 20px;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.price-row:last-child {
+    border-bottom: none;
+}
+
+.price-label {
+    color: var(--gray-color);
+}
+
+.price-value {
+    color: var(--gray-color);
+    font-weight: 500;
+}
+
+.price-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    margin-top: 15px;
+    border-top: 2px solid var(--primary-color);
+}
+
+.total-label {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.total-value {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--primary-color);
+}
+
+.form-footer {
+    text-align: center;
+}
+
+.btn-whatsapp {
+    background-color: var(--success-color);
+    color: var(--light-color);
+    border: none;
+    padding: 18px 30px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    width: 100%;
+    transition: var(--transition);
+    font-size: 1.1rem;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.btn-whatsapp:hover {
+    background-color: #1da851;
+    transform: translateY(-2px);
+    color: var(--light-color);
+}
+
+.form-note {
+    color: var(--gray-color);
+    font-size: 0.9rem;
+    margin-top: 15px;
+    text-align: center;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+
+@media (max-width: 991px) {
     .booking-hero {
         padding: 100px 0 40px;
     }
     
     .booking-hero h1 {
         font-size: 2.5rem;
+    }
+    
+    .service-image-box {
+        height: 340px;
     }
     
     .booking-form-container {
@@ -307,6 +1071,15 @@
     
     .booking-hero p {
         font-size: 1.1rem;
+    }
+    
+    .service-image-box {
+        height: 300px;
+    }
+    
+    .service-image-main-img {
+        max-width: 90%;
+        max-height: 90%;
     }
     
     .service-summary {
@@ -337,8 +1110,41 @@
 }
 
 @media (max-width: 576px) {
+    .booking-hero {
+        padding: 70px 0 25px;
+    }
+    
     .booking-hero h1 {
         font-size: 1.8rem;
+        letter-spacing: 1px;
+    }
+    
+    .booking-hero p {
+        font-size: 1rem;
+        padding: 0 15px;
+    }
+    
+    .service-image-box {
+        height: 250px;
+    }
+    
+    .service-image-main-img {
+        max-width: 95%;
+        max-height: 95%;
+        padding: 10px;
+    }
+    
+    .image-promo-badge {
+        top: 10px;
+        left: 10px;
+        padding: 6px 15px;
+        font-size: 0.8rem;
+    }
+    
+    .image-action-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
     }
     
     .form-group {
@@ -354,5 +1160,29 @@
     .btn-whatsapp {
         padding: 15px 20px;
         font-size: 1rem;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .btn-whatsapp i {
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 375px) {
+    .service-image-box {
+        height: 220px;
+    }
+    
+    .booking-hero h1 {
+        font-size: 1.6rem;
+    }
+    
+    .final-price-summary {
+        font-size: 1.8rem;
+    }
+    
+    .total-value {
+        font-size: 1.8rem;
     }
 }
